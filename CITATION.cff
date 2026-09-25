@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "如果在本项目基础上做了研究或写作，请按下面的信息引用。研究报告本身（而不是软件）也应当被单独引用。"
+title: "Franklin Writing (富兰克林写作)"
+version: 0.1.0
+doi: ""
+date-released: "2026-09-25"
+license: LicenseRef-PolyForm-Noncommercial-1.0.0
+license-url: "https://polyformproject.org/licenses/noncommercial/1.0.0"
+repository-code: "https://github.com/luluxiuc/Franklin-Writing"
+url: "https://github.com/luluxiuc/Franklin-Writing"
+abstract: >-
+  一个刻意不做 AI 评判的写作练习工具，用于实践本杰明·富兰克林的自学写作法：
+  读原文、搁几分钟、凭记忆重写、再与原文逐句并置对照。系统只负责切分、提示、
+  隐藏、延迟与记录；理解与评判完全由使用者完成。
+  项目方向由一组实测决定：5 位独立 LLM 裁判、18 个匿名文本块的受控实验显示，
+  判别力 100% 来自"有没有明显缺陷"，0% 来自"像不像作者"。因此设计中的
+  作者近似度评分与差距诊断引擎被整体删除。
+  仓库同时公开该实验的预注册标准、材料参数、分析脚本与实测数据。
+authors:
+  - family-names: "luluxiuc"
+    given-names: ""
+    alias: "luluxiuc"
+    website: "https://github.com/luluxiuc"
+keywords:
+  - 富兰克林写作法
+  - Benjamin Franklin method
+  - 写作训练
+  - writing practice
+  - 风格模仿
+  - style imitation
+  - 作者归属判断
+  - authorship attribution
+  - LLM 评测
+  - LLM evaluation
+  - 预注册
+  - pre-registration
+  - 代理漂移
+  - proxy drift
+  - 本地优先
+  - local-first
+preferred-citation:
+  type: report
+  title: "研究结论：LLM 能否判断「像不像作者」"
+  authors:
+    - family-names: "luluxiuc"
+      given-names: ""
+      alias: "luluxiuc"
+      website: "https://github.com/luluxiuc"
+  year: 2026
+  month: 9
+  url: "https://github.com/luluxiuc/Franklin-Writing/blob/main/docs/研究/llm-authorship-judgment.md"
+  repository: "https://github.com/luluxiuc/Franklin-Writing"
+  notes: >-
+    配套的实测数据（每个数字均可复算）见 docs/研究/appendix-measured-data.md。
+    决策报告见 docs/研究/why-no-llm-judgment.md。

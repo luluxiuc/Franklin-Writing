@@ -1,0 +1,61 @@
+# ---- 运行时数据:你的书、稿子、笔记、API Key ----
+# 这些东西属于使用者的私人数据,永远不进仓库。
+# 服务第一次启动会自己重建这个目录。
+app/data/*.json
+app/data/*.json.bak
+app/data/texts/
+!app/data/README.md
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---- Node ----
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 开发期跑测输出与临时脚本(不进仓库) ----
+# 约定:_probe/ 下以 _ 开头的都是临时产物,不进仓库
+_probe/_*
+tests/_*_out.txt
+
+# ---- 语料:受版权保护的原文一律不分发 ----
+_probe/corpus/
+*语料/
+corpus/
+# 实验材料全文(18 块,含 8 段受版权保护的已发表作品)。
+# build_material.py 能按预注册参数重建,所以不需要进仓库。
+_capability/blocked.json
+_capability/人工标注材料.md
+
+# ---- 本机临时文件 ----
+*.log
+*.tmp
+*.bak

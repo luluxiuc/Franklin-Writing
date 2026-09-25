@@ -1,0 +1,94 @@
+name: 补实验 / 提交实测数据
+description: 复现、扩展或推翻本项目的研究结论
+title: "[实验] "
+labels: ["research"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **这是本项目最有价值的一类贡献。**
+
+        这个工具之所以不评分、不评判，是因为一组实测数据。**数据不够的地方，决定就只能靠猜。**
+
+        我们特别欢迎**推翻**我们的结论——前提是把数据摆出来。请在下面写清楚你做了什么、怎么做的、看到了什么，包括对你不利的部分。
+
+        目前的待办研究见 [ROADMAP](https://github.com/luluxiuc/Franklin-Writing/blob/main/ROADMAP.md)。
+
+  - type: dropdown
+    id: which
+    attributes:
+      label: 你补的是哪一项
+      options:
+        - 真人标注 / 人类一致率（ROADMAP 第 1 条）
+        - 非名篇语料复测（第 2 条）
+        - 保留原始日志重跑实验一（第 3 条）
+        - 实验二：单句判别（第 4 条）
+        - 换一位写作者重造材料（第 5 条）
+        - 复现现有结论
+        - 推翻 / 修正现有结论
+        - 其它
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 你要回答的问题
+      description: 一句话。要具体到可以被证伪。
+      placeholder: 例如：三位合格读者对「这段是不是本人写的」的两两一致率是多少？
+    validations:
+      required: true
+
+  - type: textarea
+    id: design
+    attributes:
+      label: 设计
+      description: 材料是什么、多少份、怎么呈现、谁做裁判、判定标准是什么。**判定标准要写在看到结果之前。**
+      value: |
+        - 材料：
+        - 样本量：
+        - 呈现方式（是否匿名、是否打乱、是否给原文参照）：
+        - 裁判（几个、谁、同一协议吗）：
+        - 预先定下的判定标准：
+    validations:
+      required: true
+
+  - type: textarea
+    id: results
+    attributes:
+      label: 结果
+      description: 数字。能给交叉表就给交叉表。
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: problems
+    attributes:
+      label: 这次实验自身的问题
+      description: |
+        **这一栏是必填的，不是客套。** 本项目自己的研究报告里专门有一节记录自身缺陷
+        （人类一致率未测、裁判违规检索、同长度配对检验失效、材料由执行者自造……）。
+        请照样写下你这次的：样本量、循环性、有没有通道没被剥离、有没有你没能分离的混淆因素。
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 怎么复算
+      description: 脚本路径、数据文件、或者直接说清楚步骤。原始数据请一并附上或给出获取方式。
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: attest
+    attributes:
+      label: 确认
+      options:
+        - label: 我提交的数字都出自实际测量，没有估算值被写成实测值
+          required: true
+        - label: 我提交的语料可以从公开来源获取，或者我有权分发它（**受版权保护的原文请不要贴在 Issue 里**）
+          required: true
+        - label: 如果结论对我不利，我也把它写下来了
+          required: true

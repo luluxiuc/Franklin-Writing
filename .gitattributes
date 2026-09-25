@@ -1,0 +1,27 @@
+# 默认:交给 git 自动判断,并在仓库里统一用 LF
+* text=auto eol=lf
+
+# Windows 批处理必须是 CRLF,否则有些环境下会出错
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# 明确的类型(帮助 GitHub 的语言统计与 diff)
+*.py    text diff=python
+*.js    text diff=javascript
+*.mjs   text diff=javascript
+*.html  text diff=html
+*.css   text diff=css
+*.json  text
+*.md    text diff=markdown
+*.yml   text
+*.yaml  text
+*.cff   text
+
+# 二进制:不要做行尾转换,也不要尝试 diff
+*.docx  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.zip   binary

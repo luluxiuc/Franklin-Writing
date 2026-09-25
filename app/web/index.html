@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="paper" data-font="song">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>富兰克林写作</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23f6f2ea'/><rect x='9' y='7' width='14' height='18' fill='none' stroke='%23241f19' stroke-width='2'/><line x1='12' y1='12' x2='20' y2='12' stroke='%23241f19' stroke-width='1.5'/><line x1='12' y1='16' x2='20' y2='16' stroke='%23241f19' stroke-width='1.5'/><line x1='12' y1='20' x2='17' y2='20' stroke='%23241f19' stroke-width='1.5'/></svg>">
+</head>
+<body class="booting">
+
+<header class="topbar">
+  <a class="brand" id="brand" href="#/shelf">
+    <span class="brand-name">富兰克林写作</span>
+    <span class="brand-sub" id="brand-sub"></span>
+  </a>
+  <nav class="nav" id="nav">
+    <a class="navlink" data-view="shelf" href="#/shelf">书架</a>
+    <a class="navlink" data-view="records" href="#/records">记录</a>
+    <a class="navlink" data-view="settings" href="#/settings">设置</a>
+    <button class="linkbtn" id="btn-font" title="换正文字体">字体</button>
+    <button class="linkbtn" id="btn-theme" title="换纸色">纸色</button>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ══════════ 书架 ══════════ -->
+  <section class="view" id="view-shelf">
+    <div class="page-head">
+      <div>
+        <h1>书架</h1>
+        <p class="lead" id="shelf-lead"></p>
+      </div>
+      <button class="btn" id="btn-add">导入</button>
+    </div>
+    <div id="shelf"></div>
+  </section>
+
+  <!-- ══════════ 书内目录 ══════════ -->
+  <section class="view" id="view-book">
+    <div id="book"></div>
+  </section>
+
+  <!-- ══════════ 读书 ══════════ -->
+  <section class="view wide" id="view-read">
+    <div class="subbar">
+      <button class="linkbtn" id="read-back">← 目录</button>
+      <span class="subbar-title" id="read-title"></span>
+      <span class="subbar-right">
+        <button class="linkbtn" id="read-prev">上一节</button>
+        <button class="linkbtn" id="read-next">下一节</button>
+      </span>
+    </div>
+    <div id="reader"></div>
+  </section>
+
+  <!-- ══════════ 练习台（写作 / 对照）══════════ -->
+  <section class="view wide" id="view-practice">
+    <div class="subbar">
+      <button class="linkbtn" id="prac-back">← 目录</button>
+      <span class="subbar-title" id="prac-title"></span>
+      <span class="subbar-right" id="prac-meta"></span>
+    </div>
+    <div id="practice"></div>
+  </section>
+
+  <!-- ══════════ 记录 ══════════ -->
+  <section class="view" id="view-records">
+    <div class="page-head"><div><h1>练习记录</h1>
+      <p class="lead" id="records-lead"></p></div></div>
+    <div id="records"></div>
+  </section>
+
+  <!-- ══════════ 设置 ══════════ -->
+  <section class="view" id="view-settings">
+    <div class="page-head"><div><h1>设置</h1>
+      <p class="lead">只有「给每一句配一条提示」这一步会用到模型。填一次就一直有效，
+        存在这台机器上。</p></div></div>
+    <div id="settings"></div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast"></div>
+<div id="modal" class="modal-wrap hidden"><div class="modal" id="modal-box"></div></div>
+
+<script src="app.js"></script>
+</body>
+</html>

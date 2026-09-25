@@ -1,0 +1,23 @@
+root = true
+
+# 这个项目只有两类文件,规则很少。刻意不引入格式化工具。
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{js,mjs,html,css,json,yml,yaml}]
+indent_size = 2
+
+[*.md]
+# 中文文档里行尾两个空格是"换行"的意思,不要删
+trim_trailing_whitespace = false
+
+[*.{cmd,bat}]
+end_of_line = crlf
+
+[{Makefile,makefile}]
+indent_style = tab

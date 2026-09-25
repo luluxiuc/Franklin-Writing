@@ -1,0 +1,91 @@
+name: 报告问题
+description: 有东西坏了、或者表现和说好的不一样
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        谢谢。**填得越具体，修得越快。**
+
+        开之前先确认两件事：
+        1. 你的代码是最新的 `main` 分支吗？
+        2. 搜一下已有 Issue，可能已经有人报过。
+
+        **不要贴 API Key。** 贴报错信息前先检查一遍。
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么
+      description: 你做了什么，期望发生什么，实际发生了什么。
+      placeholder: |
+        我点了「读完了，去写这一段」，倒计时结束后页面……
+        我以为会……，但实际……
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 能稳定复现最好。做不到也没关系，说明大概频率。
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 出问题的环节
+      multiple: true
+      options:
+        - 导入 / 切分（段落切得不对、字丢了、粘进去乱了）
+        - 提示卡（条数不对、内容奇怪、照抄了原文）
+        - 写作台（延迟、输入、动效）
+        - 对照页（配对错位、高亮、缺失片段）
+        - 单句练习
+        - 笔记
+        - 书架 / 读书
+        - 设置 / API Key / 测试连接
+        - 数据文件 / 导出
+        - 启动不了 / 端口
+        - 其它
+    validations:
+      required: true
+
+  - type: input
+    id: text-type
+    attributes:
+      label: 你导入的是什么文本
+      description: 这一条对切分类问题特别关键。
+      placeholder: 例如：网页复制的现代白话散文（约 2000 字）／古文／txt 文件／没有标点的粘贴内容
+
+  - type: textarea
+    id: console
+    attributes:
+      label: 浏览器控制台的报错
+      description: |
+        按 F12 打开控制台。如果是前端问题（尤其是「点了没反应」），把红色的报错贴上来——这一条能省掉大量猜测。
+      render: text
+
+  - type: textarea
+    id: env
+    attributes:
+      label: 环境
+      value: |
+        - 系统：
+        - Python 版本（`python --version`）：
+        - Node 版本（如果跑了前端检查）：
+        - 浏览器：
+    validations:
+      required: true
+
+  - type: textarea
+    id: more
+    attributes:
+      label: 还有别的要说的吗
+      description: 截图、你的猜测、已经试过什么。都行。

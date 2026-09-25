@@ -1,0 +1,13 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 有想法但还没想清楚 / 想聊聊
+    url: https://github.com/luluxiuc/Franklin-Writing/discussions
+    about: 拿不准要不要开 Issue 的，先来这里。想法、用法、你自己的实验结果都欢迎。
+
+  - name: 安全问题
+    url: https://github.com/luluxiuc/Franklin-Writing/security/advisories/new
+    about: 请用私密漏洞报告，不要开公开 Issue。尤其是写作阶段泄露原文这一类。
+
+  - name: 贡献之前先读这个
+    url: https://github.com/luluxiuc/Franklin-Writing/blob/main/CONTRIBUTING.md
+    about: 特别是里面的硬约束，和「不会被接受的贡献」那一节。
