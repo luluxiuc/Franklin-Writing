@@ -9,7 +9,7 @@ Read in chronological order and you can see the direction being overturned by me
 | Document | What it is | Status |
 | --- | --- | --- |
 | [`core-method-v0.3.en.md`](core-method-v0.3.en.md) | Methodology v0.3. **The first document to name "proxy drift" as the project's most dangerous failure mode.** | Superseded |
-| [`../设计/跑测报告01-指纹与反馈引擎.docx`](../设计/跑测报告01-指纹与反馈引擎.docx) | Run report for the hand-written threshold rules: four structural false positives (flagging the author's own text as "deviating from the author", sampling at the wrong level, treating a low-frequency feature as a per-passage requirement, and scoring a closer imitation no better than a bad one). **The earliest evidence for deleting the judgment.** Chinese only; its findings are restated in full in the [decision report](../research/why-no-llm-judgment.md), section 2. | Record |
+| [`../设计/跑测报告01-指纹与反馈引擎.docx`](../设计/跑测报告01-指纹与反馈引擎.docx) | Run report for the hand-written threshold rules: four structural false positives (flagging the author's own text as "deviating from the author", sampling at the wrong level, treating a low-frequency feature as a per-passage requirement, and scoring a closer imitation no better than a bad one). **The earliest evidence for deleting the judgment.** English text: [`../research/engine-run-report-01.md`](../research/engine-run-report-01.md); the original `.docx` is Chinese only. | Record |
 | [`no-judgment-design-v1.0.en.md`](no-judgment-design-v1.0.en.md) | The product design after all AI judgment was removed. **The direct source of the shipped tool.** | Current |
 | [`user-guide.en.md`](user-guide.en.md) | The user-facing guide: how to import, how to practise, how hints stay cheap, where the data lives. | Current |
 
