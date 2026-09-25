@@ -1,3 +1,5 @@
+[English](README.en.md) · [中文](README.md)
+
 # Franklin Writing
 
 ### A measured study, and the tool it decided

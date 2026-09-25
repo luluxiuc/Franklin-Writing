@@ -1,0 +1,91 @@
+name: Report a problem
+description: Something is broken, or it behaves differently from what was documented. This form is available in English and 中文.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. **The more precisely you fill this in, the faster it gets fixed.**
+
+        Before you open this, confirm two things:
+        1. Is your code on the latest `main`?
+        2. Search the existing issues — someone may have reported it already.
+
+        **Do not paste API keys.** Read the error text over once before you paste it.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected to happen, what actually happened.
+      placeholder: |
+        I clicked "读完了，去写这一段" ("Done reading — go write this passage"), and after the countdown the page...
+        I expected ..., but actually ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Reproducing it reliably is best. If you can't, that is fine too — say roughly how often it happens.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where it went wrong
+      multiple: true
+      options:
+        - Import / splitting (paragraphs split wrong, characters lost, pasted text garbled)
+        - Hint cards (wrong count, strange content, copied the original)
+        - Writing desk (delay, input, animation)
+        - Comparison page (misaligned pairing, highlighting, missing fragments)
+        - Sentence drill
+        - Notes
+        - Shelf / reading
+        - Settings / API key / test connection
+        - Data file / export
+        - Won't start / port
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: text-type
+    attributes:
+      label: What text did you import
+      description: This one matters a lot for splitting problems.
+      placeholder: e.g. modern colloquial prose copied from a web page (~2000 characters) / classical Chinese / a .txt file / pasted text with no punctuation
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors
+      description: |
+        Press F12 to open the console. If it is a frontend problem (especially "I clicked it and nothing happened"), paste the red errors — this one saves a lot of guessing.
+      render: text
+
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      value: |
+        - OS:
+        - Python version (`python --version`):
+        - Node version (if you ran the frontend checks):
+        - Browser:
+    validations:
+      required: true
+
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: Screenshots, your guess, what you already tried. All fine.
