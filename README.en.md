@@ -383,7 +383,7 @@ python tests/run_all.py
 
 **378 checks** (the number the runner itself reports). The runner starts its own stub-model server for the rendering checks and shuts it down afterwards — no manual setup, and no real model calls (so it never costs money).
 
-> **If you have your own server running**, it holds port 8137, and the runner will **skip** the three frontend suites (the other 240 checks still run) and print how to free the port. **A skip is not a failure**, but it is also not a full run — the runner refuses to point those suites at your real server, where they would call a real model and the results would mean nothing.
+> **Having your own server running changes nothing.** It tries port 8137 first and moves to a free port if that is taken — it will not interrupt the server you are using, and it will not skip checks just because the port was busy.
 
 There is also a **repository self-check** (`python tests/docs_check.py`) for dead links, leaked keys, private data and unparseable JSON. CI runs both.
 

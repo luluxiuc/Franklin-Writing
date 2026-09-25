@@ -109,8 +109,11 @@ const document = {
 };
 
 const store = new Map();
+// host 必须跟着 BASE 走：runner 会在首选端口被占用时自动换端口，
+// 写死 8137 会让前端在拼 URL 时对不上（app.js 会用 location 拼接口地址）。
+const HOST = BASE.replace(/^https?:\/\//, '').replace(/\/$/, '');
 const loc = { hash: '#/shelf', protocol: 'http:', href: BASE + '/', origin: BASE,
-              host: '127.0.0.1:8137', pathname: '/' };
+              host: HOST, pathname: '/' };
 const sb = {
   document,
   window: { addEventListener() {}, scrollTo() {}, location: loc },

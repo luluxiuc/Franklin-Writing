@@ -24,8 +24,11 @@ import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-STUB_PORT = 8137
-BASE = 'http://127.0.0.1:%d' % STUB_PORT
+# 优先用 8137（和真服务同端口，便于对照）。被占用就往后找 —— 不要为了一个
+# 端口去打断使用者正开着的服务，那既粗鲁又容易在"杀了进程但端口还没释放"的
+# 时序上翻车（踩过：连跑两次，第一次刚 kill 完，第二次就失败）。
+PREFERRED_PORT = 8137
+PORT_TRIES = 20
 
 SUITES = [
     ('数据层', 'test_store.py', '切分可逆、分段兜底、存档、状态机', None),
@@ -36,6 +39,12 @@ SUITES = [
     ('输入动效', 'anim_check.mjs', '动效能挂能拆、不该触发的不触发', 'node'),
     ('前端渲染', 'render_check.mjs', '真跑一遍每个页面的渲染', 'node'),
 ]
+
+# 这两个套件用的是假 DOM，不需要服务。
+NO_SERVER = {'ui_check.mjs', 'anim_check.mjs'}
+
+STUB_PORT = PREFERRED_PORT
+BASE = 'http://127.0.0.1:%d' % STUB_PORT
 
 _procs = []
 _tmpdirs = []
@@ -75,42 +84,49 @@ def health():
 def start_stub():
     """起一个带假模型的服务，供渲染检查用。返回 True 表示"可用"。
 
-    端口上已经有服务时，**必须确认它是假模型服务**才能复用。
-    光看"端口通不通"不够：本地开发时 8137 上常常跑着一个真服务，
-    那样渲染检查会去连真模型，既慢又可能失败，而且报出来的错
-    （网络错误、拿不到提示）看不出真正的原因。这个坑踩过两次，所以现在显式检查。
+    策略：先看首选端口。上面如果已经跑着**假模型服务**，直接复用；
+    跑着别的东西（比如使用者自己的真服务）或者干脆起不来，就**换一个空闲端口**，
+    而不是打断使用者、也不是跳过检查。只有连一个端口都占不到才返回 False。
 
-    注意：返回 False 时调用方**必须跳过**那几个 .mjs 套件。只打印警告是不够的 ——
-    真服务也能让 /api/health 返回 200，套件会照跑，然后在"能拿到逐句提示"那里失败。
-    这个失败看起来像功能坏了，其实是测试环境不对。
+    为什么要这么绕：
+      1. 真服务也能让 /api/health 返回 200。套件照跑的话会去连真模型，
+         然后在"能拿到逐句提示"那里失败 —— 看起来像功能坏了，其实是环境不对。
+      2. 反过来"先杀进程再跑"也不行：连跑两次时，第一次刚杀完、端口还没释放，
+         第二次就失败。这个偶发红灯折腾过很久，根因就是这个时序。
+         所以最终方案是**不去动别人的进程，自己换个端口**。
     """
-    if port_busy(STUB_PORT):
-        h = health()
-        if h and h.get('tool') == 'fk' and h.get('stub'):
-            print('（8137 上已经跑着假模型服务，直接用它）')
+    global STUB_PORT, BASE
+    for port in range(PREFERRED_PORT, PREFERRED_PORT + PORT_TRIES):
+        STUB_PORT = port
+        BASE = 'http://127.0.0.1:%d' % port
+        if port_busy(port):
+            h = health()
+            if h and h.get('tool') == 'fk' and h.get('stub'):
+                print('（%d 上已经跑着假模型服务，直接用它）' % port)
+                return True
+            # 端口被别的东西占着 —— 不打扰它，试下一个
+            continue
+        data = tempfile.mkdtemp(prefix='fk_runall_')
+        _tmpdirs.append(data)
+        env = dict(os.environ, PYTHONIOENCODING='utf-8')
+        p = subprocess.Popen(
+            [sys.executable, os.path.join(HERE, 'serve_stub.py'),
+             '--port', str(port), '--data', data],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, cwd=ROOT)
+        _procs.append(p)
+        if wait_up(BASE + '/api/health'):
+            if port != PREFERRED_PORT:
+                print('（%d 被占用，假模型服务改用端口 %d）' % (PREFERRED_PORT, port))
             return True
-        print('  [!!] 8137 端口被占用，而且占用它的不是假模型服务。')
-        if h and h.get('tool') == 'fk':
-            print('       看起来是你自己的富兰克林写作服务（真服务，会去连真模型）。')
-        print('       渲染检查需要一个假模型服务，否则会去连真模型、结果不可信。')
-        print('       **所以下面三个前端套件会被跳过**（不是失败，是没跑）。')
-        print('       想跑全，请先关掉它：')
-        print('         Windows:  Get-CimInstance Win32_Process -Filter "Name like \'%%python%%\'" |')
-        print('                   ForEach-Object { Invoke-CimMethod -InputObject $_ -MethodName Terminate }')
-        print('         其它:     lsof -ti tcp:%d | xargs kill' % STUB_PORT)
-        return False
-    data = tempfile.mkdtemp(prefix='fk_runall_')
-    _tmpdirs.append(data)
-    env = dict(os.environ, PYTHONIOENCODING='utf-8')
-    p = subprocess.Popen(
-        [sys.executable, os.path.join(HERE, 'serve_stub.py'),
-         '--port', str(STUB_PORT), '--data', data],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, cwd=ROOT)
-    _procs.append(p)
-    if not wait_up(BASE + '/api/health'):
-        print('  [!!] 起不了测试服务，前端套件会跳过')
-        return False
-    return True
+        # 这个端口起不来，继续往下试
+        try:
+            p.terminate()
+        except Exception:
+            pass
+
+    print('  [!!] 从 %d 起试了 %d 个端口都起不了假模型服务，需要服务的那几个套件会跳过。'
+          % (PREFERRED_PORT, PORT_TRIES))
+    return False
 
 
 def cleanup():
@@ -143,8 +159,8 @@ def count_checks(out):
 def main():
     env = dict(os.environ, PYTHONIOENCODING='utf-8')
     stub_ok = True
-    need_server = any(s[1].endswith('.mjs') for s in SUITES)
-    if need_server and have('node'):
+    # 只有 render_check 需要服务；另外两个 .mjs 用假 DOM，自己就能跑。
+    if have('node'):
         print('准备测试服务（假模型，不联网）……')
         stub_ok = start_stub()
 
@@ -157,15 +173,15 @@ def main():
             print('\n%s　—　跳过：找不到 %s' % (label, script))
             continue
         if need and not have(need):
-            results.append((label, None, '没装 %s' % need))
+            results.append((label, None, '跳过：没装 %s' % need))
             print('\n%s　—　跳过：没装 %s' % (label, need))
             continue
-        # 没有假模型服务时，前端套件必须跳过 —— 真服务会让它们连上真模型。
-        if script.endswith('.mjs') and not stub_ok:
+        wants_server = script.endswith('.mjs') and script not in NO_SERVER
+        if wants_server and not stub_ok:
             results.append((label, None, '没有假模型服务，跳过'))
-            print('\n%s　—　跳过：8137 上没有假模型服务（见上面的说明）' % label)
+            print('\n%s　—　跳过：起不了假模型服务（见上面的说明）' % label)
             continue
-        if script.endswith('.mjs') and not wait_up(BASE + '/api/health', timeout=1):
+        if wants_server and not wait_up(BASE + '/api/health', timeout=1):
             results.append((label, None, '测试服务没起来'))
             print('\n%s　—　跳过：测试服务没起来' % label)
             continue
@@ -173,7 +189,13 @@ def main():
         print('\n' + '═' * 70)
         print('%s　—　%s' % (label, note))
         print('═' * 70)
-        cmd = ['node', path] if script.endswith('.mjs') else [sys.executable, path]
+        if script.endswith('.mjs'):
+            cmd = ['node', path]
+            # render_check 支持传服务地址；端口是动态选的，必须传进去。
+            if wants_server:
+                cmd.append(BASE)
+        else:
+            cmd = [sys.executable, path]
         t0 = time.time()
         p = subprocess.run(cmd, capture_output=True, env=env, cwd=ROOT)
         out = p.stdout.decode('utf-8', 'replace')
