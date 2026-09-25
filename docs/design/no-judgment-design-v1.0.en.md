@@ -71,7 +71,7 @@ With AI judgment removed, this screen goes from a supporting feature to the core
 ### 3.6 History and archive (record facts only, draw no conclusions)
 
 - Each round records: unit, time, whether hints were used, M's hit list, the verbatim text of "my observations", time taken.
-- The archive **does not generalise**. The system does not tell you "you habitually forget scenery description" — that too is a judgment.
+- The archive **does not generalize**. The system does not tell you "you habitually forget scenery description" — that too is a judgment.
 - Instead: **lay out the raw data that might show a pattern**, and let the user look at it themselves.
   - Example: list the missing-objects list for each of the last 10 sessions. Whether the user notices "I always drop environment-type objects" is for them to judge.
 

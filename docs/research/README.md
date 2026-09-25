@@ -73,7 +73,7 @@ python _capability/verify_report.py
 | **The retrieval channel was not removed** | 3 of 5 judges violated the protocol and looked up the source, despite an explicit instruction not to speculate about authorship. **So "0% misjudgment on real text" cannot be credited purely to style recognition.** | Open |
 | **The same-length paired test failed** | With lengths strictly matched, the judge's reason was "verbatim identical to the original, i.e. an excerpt", with a citation link — it bypassed style comparison. | Recorded |
 | **Experiment 2 is designed but not run** | Single-sentence discrimination is the design that would truly separate style judgment from length judgment. | Open |
-| **The experimenter built the materials *and* designed the study** | The imitations carry the experimenter's own fingerprint; there is no way to separate "recognised the author's hand" from "recognised the experimenter's hand". | Structural |
+| **The experimenter built the materials *and* designed the study** | The imitations carry the experimenter's own fingerprint; there is no way to separate "recognized the author's hand" from "recognized the experimenter's hand". | Structural |
 | **Small sample** | 18 blocks, 5 judges — directional only. | Recorded |
 | **The pre-registered rule missed the real failure mode** | Its trigger was "flagging real text as imitation"; the actual failure was accepting competent imitations. The corrected rule is recorded together with its reasoning, so it does not become post-hoc criterion picking. | Recorded |
 

@@ -94,7 +94,7 @@ On the left are the **sentence hints**: as many hints as the original has senten
 Why one hint per sentence rather than a few hints summarising the whole paragraph — because this is exactly what Franklin did:
 he read an essay, **jotted a short hint for each sentence**, left it a few days, then wrote the whole thing back while looking at those hints.
 And what this exercise is meant to train is precisely "writing each sentence well", so the unit of the hint should be the sentence.
-A paragraph summary re-organises the original, and that structure is the model's, not yours.
+A paragraph summary re-organizes the original, and that structure is the model's, not yours.
 
 A hint only gives "what this sentence said". It **gives no wording, no technique, no evaluation**, and the tool checks this mechanically:
 **if any hint contains a run of 8 or more characters identical to the original, that hint is dropped** — giving you a sentence of the original
@@ -210,7 +210,7 @@ beyond that, the extra characters mostly just add cost and do nothing to help yo
 
 **Four: do the arithmetic first, then spend.**
 Before "Prepare ahead" it shows "how many paragraphs are left to do, roughly how many tokens", and when the amount is large it asks for confirmation once more.
-The estimate is converted from Chinese characters and is explicitly labelled an **estimate** — it exists only so that you have a sense of the scale.
+The estimate is converted from Chinese characters and is explicitly labeled an **estimate** — it exists only so that you have a sense of the scale.
 
 **Five: the ledger records only real numbers.**
 What the Settings page shows is the `usage` **reported back** by the provider (input/output tokens, number of calls, number of hits).
@@ -237,7 +237,7 @@ Paragraphs of fewer than 40 characters skip batch generation: hints for that lit
 - **It does not write for you.** Apart from pairing each sentence with one hint, it generates no sentence at all.
 - **It does not show you "how much you have improved".** It only lays out the raw record; you read the pattern yourself.
 
-The comparison page does exactly one thing: it puts the two texts and the result of a mechanical comparison in front of you. The judgement is yours.
+The comparison page does exactly one thing: it puts the two texts and the result of a mechanical comparison in front of you. The judgment is yours.
 
 ---
 
@@ -315,7 +315,7 @@ Because a note landing on one specific sentence is something you can act on — 
 **Why tidy the whitespace once on import?**
 Articles copied from a web page often carry leading and trailing spaces, and may have lines containing nothing but whitespace.
 They don't affect the content, but they make the split produce a pile of fragments with no content, and the sentence numbering drifts.
-So on import the whitespace is normalised exactly once (extra whitespace inside a line compressed to one, runs of blank lines reduced to at most one),
+So on import the whitespace is normalized exactly once (extra whitespace inside a line compressed to one, runs of blank lines reduced to at most one),
 and **not one real character is touched** — the assertion "reassembling by paragraph equals the original" still holds.
 
 **Why use a canvas overlay for the typing effect instead of wrapping every character in an element?**
@@ -330,7 +330,7 @@ it looks messy and it isn't obvious — what a reader perceives is "this charact
 **Why are hints "one per sentence" instead of a few summarising the paragraph?**
 Franklin's own practice was to jot a short hint for each sentence ("short hints of the sentiment of each
 sentence"), leave it a few days, then write the whole thing back while looking at the hints. And this exercise trains precisely "writing each sentence well",
-so the unit of the hint should be the sentence. A paragraph summary has two further problems: it re-organises the original, and that structure is
+so the unit of the hint should be the sentence. A paragraph summary has two further problems: it re-organizes the original, and that structure is
 the model's rather than yours; and it very easily carries the original's wording in with it, so writing from it becomes transcription.
 
 **Why does the delay sit between "finished reading" and "start writing", rather than after submission?**

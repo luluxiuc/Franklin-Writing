@@ -22,7 +22,7 @@ This decision is not a design preference; it is a measured conclusion. We ran an
 | Imitations with an obvious injected defect, detected | 100% (all 5 judges detected 5/5) |
 | **Imitations with no injected defect, detected** | **0%** (3 of the 5 judges scored 0/5) |
 
-Worse is the direction of the errors: the judges' stated reasons were **rejecting the author's own features** — treating "留白收束" ("closing on an unresolved note") and "自我不确定的元陈述" ("meta-statements of self-doubt") as flaws, when those are exactly this author's signature devices. One judge even **fabricated linguistic evidence** (claiming "一个线轴只缠一色线", "a spool holds only one colour of thread") to support a style judgment.
+Worse is the direction of the errors: the judges' stated reasons were **rejecting the author's own features** — treating "留白收束" ("closing on an unresolved note") and "自我不确定的元陈述" ("meta-statements of self-doubt") as flaws, when those are exactly this author's signature devices. One judge even **fabricated linguistic evidence** (claiming "一个线轴只缠一色线", "a spool holds only one color of thread") to support a style judgment.
 
 **Conclusion:** what an LLM can do is "defect detection" (against a blacklist), not "style recognition". Passing defect detection off as style judgment in training feedback will reliably push the user away from the target author.
 
@@ -58,7 +58,7 @@ The original is hidden. The system gives you only a **mechanically extracted lis
 家乡　端午　多风俗　外地　索子　丝线拧成　小绳　手腕　丝线　掉色　洗脸　印得红
 ```
 
-*(home town · Dragon Boat Festival · many customs · elsewhere · the cord · twisted from silk thread · small cord · wrist · silk thread · colour runs · washing the face · prints red)*
+*(home town · Dragon Boat Festival · many customs · elsewhere · the cord · twisted from silk thread · small cord · wrist · silk thread · color runs · washing the face · prints red)*
 
 Every one of these fragments is a contiguous substring that really does occur in the original, extracted by a spanning scan plus an already-covered marker, and it **carries no instruction on how to write and contains no rhetorical terminology**. You do not have to use the hints.
 

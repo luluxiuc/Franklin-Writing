@@ -70,7 +70,7 @@ The corpus is a published essay, attributed above with its public source URL. Th
 **Claim two: "doesn't write emotion" is inaccurate.**
 
 - The whole text contains only **2** direct emotion words, both of them "高兴" ("happy/glad"), and **neither of the two states an emotion**:
-  - 「我对异乡人称道高邮鸭蛋，是**不大高兴**的」("When people from elsewhere praise Gaoyou duck eggs, I am **not too pleased**") — negative form, an attitude judgement
+  - 「我对异乡人称道高邮鸭蛋，是**不大高兴**的」("When people from elsewhere praise Gaoyou duck eggs, I am **not too pleased**") — negative form, an attitude judgment
   - 「什么时候孩子**一高兴**，就把络子里的鸭蛋掏出来，吃了」("whenever a child **took a fancy**, he would pull the duck egg out of the net bag and eat it") — used as an adverbial of condition (一……就…… "as soon as… then…")
 - Nowhere is there a sentence of the "他很高兴" ("he was very happy") type, with emotion as the predicate.
 - The correct formulation is therefore: **emotion words are not used as main-clause predicates**, not "emotion words are not written".
@@ -86,7 +86,7 @@ The opening sentence of paragraph 1 (8 short clauses, the densest form of this f
 | Metric | Sentinel result | Real cause |
 | --- | --- | --- |
 | List-style opening | judged 0/7 sentences | **Unit-of-measurement error**: at clause level this feature runs at 20% (13/65), at sentence level 31% (8/26); the sentinel is made of 8 short clauses, and because it was segmented by sentence they were all missed |
-| Rhythm variation | judged "too uniform" (clause-length SD 2.4 vs 3.8) | **SD varies with sample size**: 2.4 from 7 clauses and 3.8 from 179 clauses are not comparable; the metric was not normalised |
+| Rhythm variation | judged "too uniform" (clause-length SD 2.4 vs 3.8) | **SD varies with sample size**: 2.4 from 7 clauses and 3.8 from 179 clauses are not comparable; the metric was not normalized |
 | No question appeared | judged as deviation | The original's 4 questions are spread over 76 sentences, and most paragraphs simply contain no question; **"did not appear" was treated as a defect** |
 | No modal particle appeared | judged as deviation | Same as above; a low-frequency feature was treated as mandatory |
 
@@ -103,9 +103,9 @@ That sentence is "孩子一高兴，掏出来，吃了" ("the child took a fancy
 
 ### C3. A badly written draft was judged more leniently
 
-| Draft | Fingerprint | Judgement |
+| Draft | Fingerprint | Judgment |
 | --- | --- | --- |
-| User's pastiche (AI-generalised style) | 251 characters, 7 sentences, **sentence length 35.9 characters**, connective density **2.39 per 100 characters** (author 0.74) | 1 core + 2 major + 3 minor |
+| User's pastiche (AI-generalized style) | 251 characters, 7 sentences, **sentence length 35.9 characters**, connective density **2.39 per 100 characters** (author 0.74) | 1 core + 2 major + 3 minor |
 | Pastiche (constructed to the measured fingerprint, clauses 4.3 characters) | 86 characters, 11 sentences, sentence length 7.8 characters | **1 core** + 2 major + 2 minor |
 
 **The draft closer to the author received a severity count comparable to the badly written one.**
@@ -115,13 +115,13 @@ That sentence is "孩子一高兴，掏出来，吃了" ("the child took a fancy
 | Penalised by the system | The author's own measured value |
 | --- | --- |
 | Smooth long sentences, explicit connectives (因为／所以／因此 — because／so／therefore) | connective density only **0.74 per 100 characters** |
-| Complete subjects, every sentence spelled out | heavy subject ellipsis ("系百索子" ("tie on the five-coloured silk cords"), "出鸭" ("the ducks come out"), "鸭多，鸭蛋也多" ("there are many ducks, and many duck eggs too")) |
+| Complete subjects, every sentence spelled out | heavy subject ellipsis ("系百索子" ("tie on the five-colored silk cords"), "出鸭" ("the ducks come out"), "鸭多，鸭蛋也多" ("there are many ducks, and many duck eggs too")) |
 | Degree adverbs, explanatory phrasing | almost never stacked |
-| Abstract generalisation | 47 kinds of concrete named objects, 165 occurrences |
+| Abstract generalization | 47 kinds of concrete named objects, 165 occurrences |
 
 **This judging scheme is in effect rewarding the generic good prose style of "fluent, complete, logical, explained".**
 
-> **Caveat: the four false positives in section C were produced by hand-written heuristic rules; the LLM was not involved in that judging.** What they demonstrate is that passing a threshold off as judgement goes off track; they must not be used to assess LLM capability. For the LLM measurements, see section D.
+> **Caveat: the four false positives in section C were produced by hand-written heuristic rules; the LLM was not involved in that judging.** What they demonstrate is that passing a threshold off as judgment goes off track; they must not be used to assess LLM capability. For the LLM measurements, see section D.
 
 ---
 
@@ -134,7 +134,7 @@ That sentence is "孩子一高兴，掏出来，吃了" ("the child took a fancy
 | Class A | 8 real published prose paragraphs |
 | Class B | 10 AI imitations (5 with **no implanted defect**, 5 each with 1 named defect implanted) |
 | Presentation | 18 blocks, anonymised and shuffled (fixed seed 20260101), author name not given |
-| Protocol | Explicitly requires "do not assume who the author is"; the basis for a judgement must point to concrete linguistic facts; a verdict of B must quote the most suspicious passage |
+| Protocol | Explicitly requires "do not assume who the author is"; the basis for a judgment must point to concrete linguistic facts; a verdict of B must quote the most suspicious passage |
 | Judges | 5 independent LLM instances, same protocol |
 | Material script | `_capability/build_material.py`; pre-registered criteria `_capability/PREREGISTRATION.json` |
 
@@ -203,7 +203,7 @@ Listing all misjudgements made by the 5 judges, the direction is entirely consis
 | --- | --- | --- |
 | 3 | Judged "a meta-statement that only gives memory" to be a flaw: "真实写法会让「花纹」本身被描述出来" ("real writing would have the 「花纹」 (pattern) itself described") | The author uses meta-statements heavily: 「其余的都记不清，数不出了」("the rest I can't recall, can't count them out"), 「也许十二红只是一个名目」("perhaps Shi'erhong is just a name"), 「这一点是我没有记错的」("this is one point I have not misremembered") |
 | 3 | Judged "the rhythm is advanced by atmosphere rather than by information" | The same criterion would equally strike confirmed real paragraphs: 「有的样子蠢，有的秀气」("some look stupid, some elegant"), 「白嘴吃也可以」("eating it plain is fine too") |
-| 2 | 「有缠线的木轴，缠着黑线、白线」("there is a wooden spool for winding thread, wound with black thread, white thread") — called it "in reality one spool holds only one colour of thread, a flaw caused by inexperience with real objects" | **A misreading of the text** (two spools vs one), **fabricating linguistic evidence** to prop up a style judgement |
+| 2 | 「有缠线的木轴，缠着黑线、白线」("there is a wooden spool for winding thread, wound with black thread, white thread") — called it "in reality one spool holds only one color of thread, a flaw caused by inexperience with real objects" | **A misreading of the text** (two spools vs one), **fabricating linguistic evidence** to prop up a style judgment |
 | 2 | Judged "the parallel-structure blank space of the closing two sentences; the sentiment arrives too punctually" | Of the same kind as the author's closings 「我也没问」("I didn't ask either"), 「白嘴吃也可以」("eating it plain is fine too") |
 | 2 | Judged "omitting 「的」 is a deliberately manufactured rupture" | Reading precise language as deliberate rupture |
 
@@ -233,7 +233,7 @@ Recompute with [`experiment-data/confidence_stats.py`](experiment-data/confidenc
 
 Consequence: **the 0% Class A error rate cannot be credited entirely to style-recognition ability**; part of it comes from memory retrieval. Once the corpus is switched to a non-famous text, that part of the ability disappears.
 
-**Problem two: length confounding (ruled out).** In the first version of the materials, B-good averaged 59 characters vs Class A 88 characters. Normalised feature comparison:
+**Problem two: length confounding (ruled out).** In the first version of the materials, B-good averaged 59 characters vs Class A 88 characters. Normalized feature comparison:
 
 | Group | Concrete-item density | Verb density | Connectives | Emotion words | Characters |
 | --- | --- | --- | --- | --- | --- |
@@ -243,7 +243,7 @@ Consequence: **the 0% Class A error rate cannot be credited entirely to style-re
 
 **The imitation drafts have a higher concrete-object density than the original** (9.2 vs 4.7), so the alternative explanation "the judges merely disliked it for being short and thin" is ruled out. What is genuinely mechanically separable is **connectives and emotion words**: high in the bad group, zero in the good group, and zero in the original as well.
 
-**Problem three: the pre-registered rule missed the real failure mode (recorded honestly).** The pre-registered D2 trigger condition was "Class A error rate ≥ 37.5%"; measured 0%, so it **did not trigger**. The real failure mode is "judging a competent imitation as real" (a miss), which was not foreseen at pre-registration time. The revised judgement and the full reasoning are in [experiment-1-final-results.md](experiment-1-final-results.md).
+**Problem three: the pre-registered rule missed the real failure mode (recorded honestly).** The pre-registered D2 trigger condition was "Class A error rate ≥ 37.5%"; measured 0%, so it **did not trigger**. The real failure mode is "judging a competent imitation as real" (a miss), which was not foreseen at pre-registration time. The revised judgment and the full reasoning are in [experiment-1-final-results.md](experiment-1-final-results.md).
 
 ---
 
@@ -273,19 +273,19 @@ Judge A returned **2/2 correct** (it chose 甲 in both groups). But look at the 
 > ("Group 1: the two sentences of 乙 are **word-for-word identical** to the original text of Wang Zengqi's 《端午的鸭蛋》 (citing the Wenhui and 中国文艺网 links); this is an excerpt from the original.")
 
 > 第二组："**本组无逐字可核出处**，判断依据是写法……乙2 有事件、有否定、有留白……**这是人类作者常用的收束方式**，也是仿写最不容易做对的地方。"
-> ("Group 2: **no word-for-word source can be verified for this group**; the basis for the judgement is the writing… 乙2 has an event, a negation, a blank space… **this is a closing method human authors commonly use**, and also the place where imitation is hardest to get right.")
+> ("Group 2: **no word-for-word source can be verified for this group**; the basis for the judgment is the writing… 乙2 has an event, a negation, a blank space… **this is a closing method human authors commonly use**, and also the place where imitation is hardest to get right.")
 
 **Two key points:**
 
-1. **Group 1's "correct" comes from hitting the original text through retrieval, not from style judgement.** The strict balancing (47 vs 47 characters) therefore fails completely as a design — the judge bypassed the style comparison and looked the source up directly.
-2. **In group 2 it had no source to look up, and the reasoning immediately turned to "blank space / negative closing"** — and that is precisely a device the author himself uses repeatedly (「我也没问」("I didn't ask either"), 「白嘴吃也可以」("eating it plain is fine too"), 「这有什么好看呢？」("what is there to look at?")). That is, **within a single judgement it treated the author's device as "a closing method human authors commonly use" while counting it as a flaw in 甲.**
+1. **Group 1's "correct" comes from hitting the original text through retrieval, not from style judgment.** The strict balancing (47 vs 47 characters) therefore fails completely as a design — the judge bypassed the style comparison and looked the source up directly.
+2. **In group 2 it had no source to look up, and the reasoning immediately turned to "blank space / negative closing"** — and that is precisely a device the author himself uses repeatedly (「我也没问」("I didn't ask either"), 「白嘴吃也可以」("eating it plain is fine too"), 「这有什么好看呢？」("what is there to look at?")). That is, **within a single judgment it treated the author's device as "a closing method human authors commonly use" while counting it as a flaw in 甲.**
 
-**Conclusion: the paired test cannot shut the retrieval channel down, so it cannot be used to measure pure within-text style-judgement ability.**
+**Conclusion: the paired test cannot shut the retrieval channel down, so it cannot be used to measure pure within-text style-judgment ability.**
 
 ---
 
 ## F. Unfinished work
 
 1. **"Agreement rate with a qualified human consensus" has not been measured.** The objective pre-registered this metric, but in actual execution the judges were all LLMs, which is circular. The tooling is ready: `_capability/human_kit.py` can generate annotation materials containing no answers (the `materials` subcommand; `人工标注材料.md` has been generated), collect human annotations, and compute pairwise human agreement and compare it with the LLM judges (the `score` subcommand). **At least 3 qualified readers are needed, each annotating once.**
-2. **Re-testing on a non-famous corpus has not been done.** Switch to a contemporary author's corpus that the model has no memory of, stripping out the retrieval channel. Pure judgement ability is expected to be lower.
+2. **Re-testing on a non-famous corpus has not been done.** Switch to a contemporary author's corpus that the model has no memory of, stripping out the retrieval channel. Pure judgment ability is expected to be lower.
 3. **Experiment 2 (single-sentence discrimination) is designed but not executed.** Pair the author's original sentences against rewrites that keep "the same content, the same character count, the same named objects, with only the phrasing changed" in a two-choice test. Design in [experiment-2-design.md](experiment-2-design.md).

@@ -154,7 +154,7 @@ Corpus: one real 1,351-character prose piece.
 - **"This author favors short sentences" is false.** Mean sentence length 17.8 characters; longest run of short sentences is 2. At the sentence level the rhythm is not clipped at all. The real feature is one level down (mean clause length 7.5). Train against "short sentences" and you are pointing the wrong way from the start.
 - **"He avoids emotion words" is imprecise.** There are exactly two instances of the word "happy", one negated and one as an adverbial clause ("whenever the child got *happy*…"). **Neither uses emotion as the predicate.** The accurate statement is: *he does not use emotion words as the main-clause predicate.*
 
-**The same batch of hand-written threshold rules also produced four structural false positives**: flagging the author's own original text as "deviating from the author"; sampling at the wrong level; treating a low-frequency feature as a per-passage requirement; and **scoring a passage that was measurably closer to the author's fingerprint no better than a badly-written one**. None of these can be fixed by tuning thresholds — they are modelling errors, not parameter errors.
+**The same batch of hand-written threshold rules also produced four structural false positives**: flagging the author's own original text as "deviating from the author"; sampling at the wrong level; treating a low-frequency feature as a per-passage requirement; and **scoring a passage that was measurably closer to the author's fingerprint no better than a badly-written one**. None of these can be fixed by tuning thresholds — they are modeling errors, not parameter errors.
 
 ### Why a stronger model does not fix this
 
@@ -271,7 +271,7 @@ On the left, one hint per sentence — as many hints as the original has sentenc
 
 ```
 1  about the several Dragon Boat Festival customs back home
-2  lists practices like tying the five-colour cord and making scent sachets
+2  lists practices like tying the five-color cord and making scent sachets
 3  the origin of the charm, and the relationship between that Daoist and the author
 ```
 
@@ -302,7 +302,7 @@ Finally, write one line under **What I noticed**. One line is enough — "I drop
 | **Each text is generated once** | The cache key is **content hash + model name + prompt version** — independent of which book, chapter, or passage the text sits in. The same text used twice is read locally; a paragraph repeated inside a book is generated once; switching models or editing the prompt invalidates the cache automatically. |
 | **Pre-warm instead of waiting** | **Prepare in advance** batch-generates hints for a whole book in the background (concurrency 2 by default; `FK_LLM_CONCURRENCY`, set to 1 on tight free tiers). By the time you reach a passage, the hints are already local — **no model wait during practice.** |
 | **Count is set by sentence count; length is capped** | One hint per source sentence, so **the model does not decide how many hints you get.** Per-hint cap: 22 chars for ≤4 sentences, 18 for ≤8, 15 beyond that. Output tokens are bounded by *sentences × cap*. |
-| **Quote the cost before spending** | Batch warming shows how many passages remain and roughly how many tokens it will take, and asks again above a threshold. The figure is explicitly labelled an **estimate**. |
+| **Quote the cost before spending** | Batch warming shows how many passages remain and roughly how many tokens it will take, and asks again above a threshold. The figure is explicitly labeled an **estimate**. |
 | **The ledger records real numbers only** | Settings shows the `usage` the provider **returned**. If it isn't available, the tool records 0 and says so — **no estimating, no pretending to know.** You can reconcile it against your bill. |
 | **Hints that copy the source are stripped** | Every hint is checked mechanically: any hint containing 8 or more consecutive characters identical to the source is removed. Two attempts both copying, and you get none. **This is not only about cost — the moment a hint hands you the original's words, you are no longer writing from memory and the exercise is void.** |
 | **Very short passages are skipped** | Under 40 characters, batch generation is skipped: not worth the call, and you'd remember it anyway. |
@@ -383,6 +383,8 @@ python tests/run_all.py
 
 **378 checks** (the number the runner itself reports). The runner starts its own stub-model server for the rendering checks and shuts it down afterwards — no manual setup, and no real model calls (so it never costs money).
 
+> **If you have your own server running**, it holds port 8137, and the runner will **skip** the three frontend suites (the other 240 checks still run) and print how to free the port. **A skip is not a failure**, but it is also not a full run — the runner refuses to point those suites at your real server, where they would call a real model and the results would mean nothing.
+
 There is also a **repository self-check** (`python tests/docs_check.py`) for dead links, leaked keys, private data and unparseable JSON. CI runs both.
 
 A few self-checks are worth calling out, because **each one caught a real bug during development**:
@@ -404,7 +406,7 @@ A few self-checks are worth calling out, because **each one caught a real bug du
 | **The retrieval channel was not removed** | 3 of 5 judges violated the protocol and looked up the source. **So "0% misjudgment on real text" cannot be credited purely to style recognition** — and the real use case is precisely non-canonical text. | Open |
 | **The same-length paired test failed** | With lengths strictly matched, the judge's stated reason was "passage B is verbatim identical to the original, i.e. an excerpt", with a citation link — it bypassed style comparison. | Recorded |
 | **Experiment 2 (single-sentence discrimination) is designed but not run** | Pair an author's real sentence against a rewrite with identical content, length and objects, varying only the *writing*. | Open |
-| **The experimenter built the materials *and* designed the study** | The imitations carry the experimenter's own fingerprint; there is no way to separate "recognised the author's hand" from "recognised the experimenter's hand". | Structural |
+| **The experimenter built the materials *and* designed the study** | The imitations carry the experimenter's own fingerprint; there is no way to separate "recognized the author's hand" from "recognized the experimenter's hand". | Structural |
 | **Small sample** | 18 blocks, 5 judges — directional conclusions only, not a precise ceiling on ability. | Recorded |
 | **The pre-registered rule missed the real failure mode** | Its trigger was "misjudgment rate on real text ≥ 37.5%"; measured 0%, so it never fired. The actual failure was accepting competent imitations. | Recorded |
 | **The raw logs were not all kept** | Per-block verdicts survive for only 3 of the 5 judges, and the verdict values were hand-transcribed constants. | Recorded |

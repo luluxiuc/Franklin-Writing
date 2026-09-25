@@ -29,7 +29,7 @@ AI is not responsible for literary appreciation. AI's task is: to turn a good au
 
 Main loop:
 
-> analyse the author from several works → build the author model → analyse the specific article → split training units sensibly → organise the copy exercise → compare the user's work → find the gaps against the author → explain why the gaps arise → guide the user's correction → judge the degree of closeness → adjust training difficulty dynamically
+> analyze the author from several works → build the author model → analyze the specific article → split training units sensibly → organize the copy exercise → compare the user's work → find the gaps against the author → explain why the gaps arise → guide the user's correction → judge the degree of closeness → adjust training difficulty dynamically
 
 ### 3. Form constraints of this project (new in V0.3, but placed first)
 
@@ -69,7 +69,7 @@ A probe run on Wang Zengqi's 《端午的鸭蛋》 ("Dragon Boat Festival Duck E
 
 1. **The generic conclusion points the wrong way.** Describing this author from impression, the most natural conclusion is "he is good at short sentences". Measured: mean sentence length 17.8 characters, standard deviation 10.0, longest run of consecutive short sentences only 2 — **at the sentence level his rhythm is not at all clipped**. The real feature is at the next unit down: **mean clause length 7.5 characters**, with 179 clauses distributed across 76 sentences, and a run of **8 consecutive clauses of ≤6 characters** did occur. "Short sentences" is a generic label that any model will produce, and it points the wrong way.
 
-2. **The system's actual penalty direction is "generic good prose".** The features judged as deviations in the probe were: clauses on the long side, too many explicit connectives, complete subjects, degree adverbs present, abstract generalisation. This author's real practice is the exact opposite (connective density only 0.74 per hundred characters, subjects omitted in large numbers, one concrete object every 8 characters). A real user revising according to this feedback would **become more and more like an ordinary writer of smooth, correct prose**.
+2. **The system's actual penalty direction is "generic good prose".** The features judged as deviations in the probe were: clauses on the long side, too many explicit connectives, complete subjects, degree adverbs present, abstract generalization. This author's real practice is the exact opposite (connective density only 0.74 per hundred characters, subjects omitted in large numbers, one concrete object every 8 characters). A real user revising according to this feedback would **become more and more like an ordinary writer of smooth, correct prose**.
 
 3. **Even the author's own original text was judged as deviating from the author.** Feeding the original's own sentences (the opening of paragraph 1) into the judgment engine detected 2 major problems + 2 minor problems. Among them "list-style opening 0/7" is false — **an error in the unit of measurement**: that feature accounts for 20% at clause level and 31% at sentence level, while the sentinel text consists of 8 short clauses, which is precisely the densest form of that feature, yet it was missed because the split was by sentence.
 
@@ -81,12 +81,12 @@ A probe run on Wang Zengqi's 《端午的鸭蛋》 ("Dragon Boat Festival Duck E
 
 | Type | Example | Permitted way of judging |
 | --- | --- | --- |
-| Distributional | clause length, punctuation density, sentence length distribution | may only be compared **whole text against whole text**; **length normalisation is mandatory**; **judging absence paragraph by paragraph is forbidden** |
+| Distributional | clause length, punctuation density, sentence length distribution | may only be compared **whole text against whole text**; **length normalization is mandatory**; **judging absence paragraph by paragraph is forbidden** |
 | Structural | list-style juxtaposition, register drop, a question left unanswered, a colloquial close | high training value; must be judged at the **correct unit of measurement** |
 | Rare items | one particular question, one particular modal particle, one particular word | **never used as a criterion of "absent therefore deviating"** |
 | Taboo | for example "an emotion word serving as the predicate of the main clause" | the **only** type where "present therefore deviating" is permitted |
 
-In the probe, "no question appeared" and "no modal particle appeared" were treated as deviations: that is misusing rare items as absence criteria; "clause standard deviation 2.4 vs 3.8" is a distributional metric used on a short paragraph without normalisation. **Neither class of error can be fixed by tuning thresholds; only grading and disabling can fix them.**
+In the probe, "no question appeared" and "no modal particle appeared" were treated as deviations: that is misusing rare items as absence criteria; "clause standard deviation 2.4 vs 3.8" is a distributional metric used on a short paragraph without normalization. **Neither class of error can be fixed by tuning thresholds; only grading and disabling can fix them.**
 
 **Defence 3: any rule of the form "the author does not write X" must first search X across the author's complete works.** A rule must not penalise something the author himself used. In the probe, a copy draft I wrote from the measured fingerprint was judged a core problem for "孩子一高兴" — and that is exactly the original sentence 「什么时候孩子一高兴，就把络子里的鸭蛋掏出来，吃了」 ("whenever the child got excited, he would fish the duck egg out of the net bag and eat it"). **Same author, same word, same usage, same syntactic position.** Errors of this kind must be intercepted by the rule-validation step.
 
@@ -183,7 +183,7 @@ This layer is the only place in the system where errors are possible. Its output
 
 #### Layer 3: calibration samples (style anchors)
 
-The author model must store 5–10 **passages from the original that best represent this author**, each labelled with what it represents ("typical of indirect emotional expression", "typical of rhythmic variation").
+The author model must store 5–10 **passages from the original that best represent this author**, each labeled with what it represents ("typical of indirect emotional expression", "typical of rhythmic variation").
 
 The use is: when the system says "this paragraph of yours isn't like him", it can pull the calibration sample up for direct comparison, instead of asking the user to believe an abstract description. **Any style conclusion without a calibration sample is treated as unverified.**
 
@@ -229,7 +229,7 @@ V0.2 said "import several works → form an author writing model", but gave no a
 
 **Confidence and cold start:**
 
-| Condition | Mode | System behaviour |
+| Condition | Mode | System behavior |
 | --- | --- | --- |
 | ≥ 3 works and validation passed | **author mode** | all comparison features against the author model are available |
 | 1–2 works, or validation failed | **work mode** | comparison against the single original only; the interface clearly states "currently in work mode; no author model has been built" |
@@ -277,7 +277,7 @@ In principle the system does not correct in real time while the user copies. V0.
 - **no spelling or grammar underlines are shown**;
 - **no live suggestions of any kind**;
 - the first pass **does not show the original** by default, and after submission no entry point for "take another look at the original and then rewrite" is provided within this unit (the original appears naturally at the comparison stage);
-- an "I really can't remember" button is provided, whose behaviour is to **honestly accept this incomplete draft** rather than to give hints. If the user can write 30%, they submit 30%.
+- an "I really can't remember" button is provided, whose behavior is to **honestly accept this incomplete draft** rather than to give hints. If the user can write 30%, they submit 30%.
 
 The idea from V0.2 that "the errors are themselves the learning material" should be saved explicitly: the differences between the first-pass draft and the original must be charted separately (recorded as M, see §9), for long-term observation of **what the user habitually forgets** — for example always dropping scenery description, always compressing the pauses out. Patterns of this kind often have more long-term value than "does this pass resemble the author".
 
@@ -341,7 +341,7 @@ The user sees all 9 items; but only those marked [change this round] carry into 
 **Four further negative hard criteria** (based on the target practice in Part 2; hit any one and it must not be output):
 
 5. **No judgment may be generated directly from a statistical fingerprint.** Layer 1 may output only descriptions ("the original's mean clause length is 7.5±3.8, this paragraph 4.3±1.6") and must not output conclusions ("the rhythm doesn't match"). The power to judge belongs to layer 2 alone.
-6. **Rare items must not be treated as absence criteria.** "no question appears" and "no modal particle appears" are not deviations. Distributional metrics must be whole text against whole text, and length-normalised; when the sample is too small (fewer than about 15 clauses), no distributional conclusion may be output.
+6. **Rare items must not be treated as absence criteria.** "no question appears" and "no modal particle appears" are not deviations. Distributional metrics must be whole text against whole text, and length-normalized; when the sample is too small (fewer than about 15 clauses), no distributional conclusion may be output.
 7. **No comparing across units of measurement.** Each metric declares its sampling level (clause / sentence / paragraph / whole text), and the same metric must not be judged across levels.
 8. **Nothing the author himself used may be penalised.** Any rule of the form "the author does not write X" must first search X across the author's complete works; if it hits, the rule is void.
 
@@ -425,7 +425,7 @@ The archive uses **dimension names and evidence**, not scores. A user should be 
 
 This is the key to whether an open-source project can stand. Four things must be done in the first version:
 
-**(1) Calibration set.** Prepare 20–30 pairs of "original sentence vs user sentence", manually labelled "resembles / doesn't resemble" with reasons. Use it to check whether the AI's judgment agrees with human judgment. When the agreement rate falls below the agreed threshold (80% suggested), the judgment criteria must be revised rather than continuing to ship.
+**(1) Calibration set.** Prepare 20–30 pairs of "original sentence vs user sentence", manually labeled "resembles / doesn't resemble" with reasons. Use it to check whether the AI's judgment agrees with human judgment. When the agreement rate falls below the agreed threshold (80% suggested), the judgment criteria must be revised rather than continuing to ship.
 
 **(2) A recovery entry point for judgment errors.** The user can click "this judgment is wrong" on any feedback item. All marked items enter the calibration-set candidate pool. This is the system's only channel for self-improvement.
 
@@ -478,6 +478,6 @@ The four sentences still hold; this version only makes them executable:
 | Style transfer report | style fit | an author-range hit comparison table | a number cannot be interpreted |
 | Validating the system itself | not addressed | calibration set + judgment-error recovery + **sentinel regression** + effectiveness testing + blind test | an open-source project needs to be verifiable |
 | Form and data | unspecified | local-first, provider-agnostic, version-traceable | determines the architecture and how copyright is handled |
-| **Proxy drift** | **not recognised** | **its own Part 2, with six hard lines of defence** | measured proof: the system stably trains the user to be "like the author as described by the AI" |
+| **Proxy drift** | **not recognized** | **its own Part 2, with six hard lines of defence** | measured proof: the system stably trains the user to be "like the author as described by the AI" |
 | **Metric permissions** | no distinction | layer 1 describes only, layer 2 judges; features split into four types with different permissions | all four false positives in the probe came from layer 1 overstepping into judgment |
 | **Unit of measurement** | unspecified | each metric declares its sampling level, cross-level comparison forbidden | the missed detection of "list-style opening 0/7" was caused entirely by inconsistent units |

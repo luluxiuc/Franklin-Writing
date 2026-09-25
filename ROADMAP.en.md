@@ -50,7 +50,7 @@ Every entry in this section corresponds to a defect explicitly recorded in the r
 
 **How to do it:** pair an author's own sentence against a rewrite that has "**the same content, the same character count, the same named entities, only the phrasing changed**" in a forced choice, and permute the proper nouns to block the search channel. The design is already written: [`docs/research/experiment-2-design.md`](docs/research/experiment-2-design.md).
 
-**Note one limitation the design states:** who constructs the material matters a great deal. **If the same person both constructs the material and designs the experiment, there is no way to distinguish "recognising the author's hand" from "recognising the experimenter's hand".** Ideally a different writer constructs the material.
+**Note one limitation the design states:** who constructs the material matters a great deal. **If the same person both constructs the material and designs the experiment, there is no way to distinguish "recognizing the author's hand" from "recognizing the experimenter's hand".** Ideally a different writer constructs the material.
 
 ### 5. Have a different writer rebuild the material
 

@@ -103,7 +103,7 @@ Hierarchy is expressed with fonts and typography, not with icon-style emoji. Thi
 - **Comments explain "why", not "what".** In particular, write clearly which pitfall a given threshold or a given ordering was settled by falling into. The most valuable comments in this repository are all of that kind.
 - Chinese comments and Chinese strings, consistent with the existing code.
 - No formatter and no lint rule set. Staying consistent with the surrounding code is enough.
-- **New behaviour must come with tests.** Especially on the frontend: asserting "the data is different" is not enough, you have to assert "the click really reaches the code".
+- **New behavior must come with tests.** Especially on the frontend: asserting "the data is different" is not enough, you have to assert "the click really reaches the code".
 
 ### Three frontend lessons
 
@@ -126,10 +126,10 @@ It sounds silly, but it really happened: `FONTS_ANIM` was declared after the fun
 2. Fork, and branch off `main`. Any branch name will do, as long as it is understandable.
 3. When you are done, run `python tests/run_all.py`, all green.
 4. Submit the PR and state three things clearly:
-   - **What changed** (down to the behaviour)
+   - **What changed** (down to the behavior)
    - **Why** (if it fixes a bug, write out the reproduction steps)
    - **How you verified it** (which test, or how you tried it by hand)
-5. When you add or change behaviour, **bring the tests in the same PR**.
+5. When you add or change behavior, **bring the tests in the same PR**.
 
 **About commit messages:** Chinese or English, either is fine, as long as it is understandable. No format is enforced.
 

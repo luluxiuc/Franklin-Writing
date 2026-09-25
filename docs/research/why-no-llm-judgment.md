@@ -262,7 +262,7 @@ We easily take "训练用户像作者" ("training the user to be like the author
 
 ### 4.3 The remaining subjective layer is inconsistent even between real people
 
-This point deserves separate emphasis: **even two trained human readers are often inconsistent about "这一处是否捕捉到了作者的笔法" ("whether this spot has captured the author's handling").** More precisely, the disagreements concentrate on one class of text — **text that is competently written, but that you are not sure is his** — which is to say, all the text a user will meet in training.
+This point deserves separate emphasiz: **even two trained human readers are often inconsistent about "这一处是否捕捉到了作者的笔法" ("whether this spot has captured the author's handling").** More precisely, the disagreements concentrate on one class of text — **text that is competently written, but that you are not sure is his** — which is to say, all the text a user will meet in training.
 
 If humans are inconsistent among themselves, then:
 

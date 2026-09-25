@@ -73,28 +73,32 @@ def health():
 
 
 def start_stub():
-    """起一个带假模型的服务，供渲染检查用。
+    """起一个带假模型的服务，供渲染检查用。返回 True 表示"可用"。
 
     端口上已经有服务时，**必须确认它是假模型服务**才能复用。
     光看"端口通不通"不够：本地开发时 8137 上常常跑着一个真服务，
     那样渲染检查会去连真模型，既慢又可能失败，而且报出来的错
-    （网络错误、拿不到提示）看不出真正的原因。这个坑踩过一次，所以现在显式检查。
+    （网络错误、拿不到提示）看不出真正的原因。这个坑踩过两次，所以现在显式检查。
+
+    注意：返回 False 时调用方**必须跳过**那几个 .mjs 套件。只打印警告是不够的 ——
+    真服务也能让 /api/health 返回 200，套件会照跑，然后在"能拿到逐句提示"那里失败。
+    这个失败看起来像功能坏了，其实是测试环境不对。
     """
     if port_busy(STUB_PORT):
         h = health()
         if h and h.get('tool') == 'fk' and h.get('stub'):
             print('（8137 上已经跑着假模型服务，直接用它）')
-            return None
-        print('  [!!] 8137 端口被占用，而且占用它的不是假模型服务，是别的东西。')
+            return True
+        print('  [!!] 8137 端口被占用，而且占用它的不是假模型服务。')
         if h and h.get('tool') == 'fk':
             print('       看起来是你自己的富兰克林写作服务（真服务，会去连真模型）。')
         print('       渲染检查需要一个假模型服务，否则会去连真模型、结果不可信。')
-        print('       请先关掉它，或者让 runner 自己起：')
+        print('       **所以下面三个前端套件会被跳过**（不是失败，是没跑）。')
+        print('       想跑全，请先关掉它：')
         print('         Windows:  Get-CimInstance Win32_Process -Filter "Name like \'%%python%%\'" |')
         print('                   ForEach-Object { Invoke-CimMethod -InputObject $_ -MethodName Terminate }')
         print('         其它:     lsof -ti tcp:%d | xargs kill' % STUB_PORT)
-        print('       不放心的话，直接杀掉再重跑本脚本即可。')
-        return None
+        return False
     data = tempfile.mkdtemp(prefix='fk_runall_')
     _tmpdirs.append(data)
     env = dict(os.environ, PYTHONIOENCODING='utf-8')
@@ -104,9 +108,9 @@ def start_stub():
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env, cwd=ROOT)
     _procs.append(p)
     if not wait_up(BASE + '/api/health'):
-        print('  [!!] 起不了测试服务，渲染检查会跳过')
-        return None
-    return p
+        print('  [!!] 起不了测试服务，前端套件会跳过')
+        return False
+    return True
 
 
 def cleanup():
@@ -138,10 +142,11 @@ def count_checks(out):
 
 def main():
     env = dict(os.environ, PYTHONIOENCODING='utf-8')
+    stub_ok = True
     need_server = any(s[1].endswith('.mjs') for s in SUITES)
     if need_server and have('node'):
         print('准备测试服务（假模型，不联网）……')
-        start_stub()
+        stub_ok = start_stub()
 
     results = []
     checks_passed = checks_total = 0
@@ -154,6 +159,11 @@ def main():
         if need and not have(need):
             results.append((label, None, '没装 %s' % need))
             print('\n%s　—　跳过：没装 %s' % (label, need))
+            continue
+        # 没有假模型服务时，前端套件必须跳过 —— 真服务会让它们连上真模型。
+        if script.endswith('.mjs') and not stub_ok:
+            results.append((label, None, '没有假模型服务，跳过'))
+            print('\n%s　—　跳过：8137 上没有假模型服务（见上面的说明）' % label)
             continue
         if script.endswith('.mjs') and not wait_up(BASE + '/api/health', timeout=1):
             results.append((label, None, '测试服务没起来'))
