@@ -12,7 +12,22 @@ Web UI, running on your own machine. All data stays local. Only one step — "su
 
 ### 1. Open it
 
-**Windows:** double-click `启动.cmd`; the browser opens by itself.
+**Windows, easiest: type `fk` anywhere.**
+
+Open a terminal (search "Terminal" in the Start menu, or Win+R and type `cmd`) and run:
+
+```
+fk
+```
+
+Any directory, no `cd`, no path to remember. If the server is not running it starts it; if it already is, it just opens the page — **and it will not start a second copy**.
+
+> Where that comes from: a small `fk.cmd` in a directory on your PATH, with the project location written into it.
+> It is not distributed with the repository (everyone's path differs), so **on a new machine you generate it again**.
+
+**Windows, no command line: double-click `启动.cmd`.** The browser opens by itself.
+
+> That file **must stay pure ASCII**. cmd.exe parses a `.cmd` line by line in the system OEM code page (GBK on a Chinese Windows), so a single Chinese character gets split mid-byte and the leftover bytes are run as commands — the symptom is that **the window flashes and the server never starts**. That bug really happened, which is why its messages are now in English and why a test watches for it (`tests/docs_check.py`, section 4).
 
 **macOS / Linux:**
 
