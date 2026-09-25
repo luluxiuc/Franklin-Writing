@@ -1,12 +1,24 @@
 # Franklin Writing
 
-**A writing-practice tool that deliberately refuses to judge your writing.**
+### A measured study, and the tool it decided
 
-Import an essay or a book. Read the original. Wait a few minutes. Rewrite it from memory. Then see your version and the original side by side, sentence by sentence. The system handles splitting, hinting, hiding, delaying, and recording. **All understanding and all judgment stay with you.**
+**From a controlled experiment with 5 independent LLM judges, 18 anonymized text blocks, and a pre-registered decision rule:**
 
-Runs as a web app on your own machine. All data stays local. Exactly one step — turning the original into per-sentence hints — can use an LLM, and the tool works without one.
+> **Discriminating power came 100% from "does it contain an obvious defect" and 0% from "does it sound like the author".**
 
-[中文](README.md) · [Why there is no AI scoring](docs/research/why-no-llm-judgment.md) · [Full measured data](docs/research/appendix-measured-data.md) · [User guide (中文)](docs/设计/工具使用说明.md) · [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md)
+| Metric | Result |
+| --- | --- |
+| Real text misjudged as imitation | **0%** |
+| Imitations with an injected defect, detected | **100%** |
+| **Imitations with no injected defect, detected** | **0%** |
+
+**So this tool does not score, does not evaluate, and never says whether your writing "sounds like the author".** It does one thing: it puts the right actions of the Franklin method in the right order — splitting, hinting, hiding, delaying, recording — and leaves all understanding and all judgment to you.
+
+**Full study (every figure recomputable):** [English](docs/research/) · [中文](docs/研究/) · [One-page conclusion](docs/research/llm-authorship-judgment.md) · [All measured data](docs/research/appendix-measured-data.md) · [Decision report](docs/research/why-no-llm-judgment.md)
+
+[中文](README.md) · [Roadmap](ROADMAP.en.md) · [Changelog](CHANGELOG.en.md) · [Contributing](CONTRIBUTING.en.md)
+
+> **Note on language.** The tool's interface is in Chinese, because the method is being applied to Chinese prose. Every document in this repository now has an English version; the interface strings do not yet.
 
 <!-- badges -->
 [![Tests](https://github.com/luluxiuc/Franklin-Writing/actions/workflows/test.yml/badge.svg)](https://github.com/luluxiuc/Franklin-Writing/actions/workflows/test.yml)
@@ -15,20 +27,17 @@ Runs as a web app on your own machine. All data stays local. Exactly one step �
 [![Zero dependencies](https://img.shields.io/badge/dependencies-stdlib%20only-success)](#quick-start)
 [![Works offline](https://img.shields.io/badge/offline-works-success)](#what-it-does-not-do)
 
-> **Note on language.** The tool's interface and most of the research are in Chinese, because the training method is being applied to Chinese prose. The research reports have English versions; the raw experimental data files are bilingual or language-neutral. Issues and PRs in English are welcome.
-
 ---
 
 ## Contents
 
-- [The finding: why this project has no AI scoring](#the-finding-why-this-project-has-no-ai-scoring)
-- [Measured data](#measured-data)
-- [What it does](#what-it-does)
-- [Screenshots](#screenshots)
+- [The study: can an LLM judge "sounds like the author"?](#the-study-can-an-llm-judge-sounds-like-the-author)
+- [What this tool does](#what-this-tool-does)
 - [Quick start](#quick-start)
 - [How to use it](#how-to-use-it)
 - [How the hints stay cheap and leak nothing](#how-the-hints-stay-cheap-and-leak-nothing)
 - [What it does not do](#what-it-does-not-do)
+- [Repository layout](#repository-layout)
 - [Where your data lives](#where-your-data-lives)
 - [Tests](#tests)
 - [Limitations of this research](#limitations-of-this-research)
@@ -37,67 +46,23 @@ Runs as a web app on your own machine. All data stays local. Exactly one step �
 
 ---
 
-## The finding: why this project has no AI scoring
+## The study: can an LLM judge "sounds like the author"?
 
 This project originally had an "author similarity" scoring and gap-diagnosis engine at its core: you imitate a passage, and the AI tells you where you don't sound like the author, why, and what to fix next.
 
 **We measured it and deleted the entire engine. Not because it performed poorly, but because it turned out to be doing something different from what it claimed to do.**
 
-Five independent LLM judges. Eighteen anonymized text blocks. A pre-registered decision rule. The results:
+### Experiment 1: a controlled judge experiment
 
-| Metric | Result | Note |
-| --- | --- | --- |
-| Real text misjudged as imitation | **0%** | All 5 judges correct on 8/8 |
-| Imitations with an injected defect, detected | **100%** | All 5 judges caught 5/5 |
-| **Imitations with no injected defect, detected** | **0%** | Majority verdict; 3 of 5 judges scored 0/5 |
-
-The first two rows look like strong ability. **The third row shows it is not doing style attribution at all — it is doing defect detection**, using an enumerable blacklist (naming emotions directly, "as if whispering something", explanatory connectives, abstract closings), not a sense of whether the text sounds like this author.
-
-> **Discriminating power came 100% from "does it contain an obvious defect" and 0% from "does it sound like the author".**
-
-### The problem is not inaccuracy — it is that the errors point one way
-
-Inaccuracy is just noise. What made us delete the engine is this: **the judges rejected the author's own signature devices.**
-
-| The judge's stated reason | The fact |
+| Item | Detail |
 | --- | --- |
-| "Merely a meta-statement about memory" is a flaw; real writing would describe the thing itself | This author uses meta-statements constantly: "the rest I can't recall, can't count them out", "perhaps *twelve red* is just a name", "this point I am not misremembering" |
-| "The rhythm is carried by mood rather than information" | The same criterion would condemn confirmed-authentic passages by this author: "some look stupid, some look elegant", "eating it plain is fine too" |
-| "In reality a spool holds only one color of thread — a flaw from inexperience with physical objects" | **A misreading of the text** (the original has two spools). The judge **fabricated textual evidence** to support a style judgment |
-| "The ending leaves a blank; the sentiment arrives too punctually" | Structurally identical to this author's own closings: "I didn't ask either", "eating it plain is fine too" |
-| "Dropping the possessive particle is a deliberately manufactured rupture" | Judging precise language as manufactured rupture |
+| Material | 8 real published prose passages + 10 AI imitations (5 with no injected defect, 5 with one named defect each), presented as 18 anonymized blocks in fixed-seed shuffled order |
+| Presentation | No author name, no reference original |
+| Protocol | Explicit instruction "do not assume who the author is"; evidence must point at concrete language facts; a verdict of "imitation" must quote the most suspicious fragment |
+| Judges | 5 independent LLM instances, identical protocol |
+| Decision rule | **Frozen before any result was seen** → [`PREREGISTRATION.json`](docs/research/experiment-data/PREREGISTRATION.json) |
 
-Wire that feedback into a training loop and here is what a user does: **delete "I didn't ask either", fill the blank with an explanation, add subjects and connectives.**
-
-**They become a competent, ordinary writer — not the author they set out to learn from.**
-
-### Why a stronger model does not fix this
-
-A model never compares *your text* against *the author*. It compares *your text* against *its understanding of the author*. That gap does not close as models improve — **a stronger model produces a finer-grained proxy, and a finer-grained proxy is still a proxy.**
-
-Four structural reasons on top of that:
-
-1. **The description itself can point at the wrong level.** In our measurements, even the most natural first impression — "this author favors short sentences" — was false. Mean sentence length is 17.8 characters; the longest run of consecutive short sentences is 2. The real feature lives one level down: mean clause length 7.5 characters. Train against "short sentences" and you are pointing the wrong way from the start.
-2. **A reader with only the text in front of them — model or human — cannot see much of what determines "sounding like" someone.** The choices the author didn't make, who else they were in conversation with, what they deliberately avoided. **Some disagreements are not model failures; they are task failures.**
-3. **The remaining subjective layer is unstable even between humans**, and the disagreement concentrates exactly on "competent writing that may or may not be the author" — which is every text a learner will ever produce. If humans do not agree, there is no "human consensus" to align to.
-4. **The cost of error is asymmetric.** Get it right: the user receives a useful hint. Get it wrong: the user deletes a correct device, **and the loss is irreversible and invisible to them** — they have no reason to doubt a confident, well-organised judgment that quotes the original.
-
-> **In the business of teaching someone to write, wrong guidance is worse than no guidance.**
-
-Deleting the judgment costs nothing, because the Franklin method's engine was never the judgment. It is the *actions*: read, reconstruct away from the source, delay, compare side by side. Franklin himself worked exactly this way — **his critic was himself.**
-
-**Full reports:** [Can an LLM judge "sounds like the author"?](docs/research/llm-authorship-judgment.md) · [The decision report](docs/research/why-no-llm-judgment.md) · [All measured data](docs/research/appendix-measured-data.md) (every number recomputable from scripts in this repo)
-
----
-
-## Measured data
-
-Every number below comes from local computation or a controlled judge experiment. Scripts are in the repository. **No estimated values.**
-
-### Experiment 1: LLM authorship attribution
-
-**Material:** 8 real published prose passages + 10 AI imitations (5 with no injected defect, 5 with one named defect each), presented as 18 anonymized blocks in fixed-seed shuffled order. No author name, no reference original.
-**Judges:** 5 independent LLM instances, identical protocol. The decision rule was frozen before any results were seen ([pre-registration](docs/research/experiment-data/PREREGISTRATION.json)).
+**Per-block votes** (all 18 rows):
 
 | Block | Truth | Type | J1 | J2 | J3 | J4 | J5 | Agreement |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -118,7 +83,7 @@ Every number below comes from local computation or a controlled judge experiment
 
 **Inter-judge unanimity: 13/18 = 72%. Disagreement fell 100% on the "clean imitation" blocks — the only category that matters.**
 
-Per-judge cross-tabulation:
+**Per-judge cross-tabulation:**
 
 | Judge | Real→A | Real→B | Imit→B | Imit→A | Clean caught | Overall |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -128,9 +93,35 @@ Per-judge cross-tabulation:
 | J4 | 8/8 | 0/8 | 5/10 | 5/10 | **0/5** | 13/18 |
 | J5 | 8/8 | 0/8 | 5/10 | 5/10 | **0/5** | 13/18 |
 
-### The obvious alternative explanation is ruled out
+### The problem is not inaccuracy — it is that the errors point one way
 
-Normalized feature comparison:
+Inaccuracy is just noise. What made us delete the engine is this: **the judges rejected the author's own signature devices.**
+
+| The judge's stated reason | The fact |
+| --- | --- |
+| "Merely a meta-statement about memory" is a flaw; real writing would describe the thing itself | This author uses meta-statements constantly: "the rest I can't recall, can't count them out", "perhaps *twelve red* is just a name", "this point I am not misremembering" |
+| "The rhythm is carried by mood rather than information" | The same criterion would condemn confirmed-authentic passages by this author: "some look stupid, some look elegant", "eating it plain is fine too" |
+| "In reality a spool holds only one color of thread — a flaw from inexperience with physical objects" | **A misreading of the text** (the original has two spools). The judge **fabricated textual evidence** to support a style judgment |
+| "The ending leaves a blank; the sentiment arrives too punctually" | Structurally identical to this author's own closings: "I didn't ask either", "eating it plain is fine too" |
+| "Dropping the possessive particle is a deliberately manufactured rupture" | Judging precise language as manufactured rupture |
+
+Wire that feedback into a training loop and here is what a user does: **delete "I didn't ask either", fill the blank with an explanation, add subjects and connectives.**
+
+**They become a competent, ordinary writer — not the author they set out to learn from.**
+
+### The errors are not hedged
+
+The 3 judges whose per-block verdicts were archived (J1, J3, J5) produced 45 verdicts in total, **10 of them wrong — all at self-reported confidence ≥ 4**, one at the maximum of 5.
+
+| Group | n | Correct | Mean confidence when correct | Mean confidence when wrong |
+| --- | --- | --- | --- | --- |
+| A real | 24 | 24/24 | 4.88 | — |
+| B clean imitation | 15 | 5/15 | 3.80 | **4.10 (n=10)** |
+| B defective imitation | 15 | 15/15 | 4.80 | — |
+
+**So "just filter out the low-confidence judgments" is not an escape route either.** Recompute with `python docs/research/experiment-data/confidence_stats.py`.
+
+### The obvious alternative explanation is ruled out
 
 | Group | Concrete-noun density | Verb density | Connectives | Emotion words | Mean chars |
 | --- | --- | --- | --- | --- | --- |
@@ -158,18 +149,46 @@ Corpus: one real 1,351-character prose piece.
 
 **Two common assumptions the measurements killed:**
 
-- **"This author favors short sentences" is false.** Mean sentence length 17.8 characters; longest run of short sentences is 2. At the sentence level the rhythm is not clipped at all. The real feature is one level down (mean clause length 7.5).
+- **"This author favors short sentences" is false.** Mean sentence length 17.8 characters; longest run of short sentences is 2. At the sentence level the rhythm is not clipped at all. The real feature is one level down (mean clause length 7.5). Train against "short sentences" and you are pointing the wrong way from the start.
 - **"He avoids emotion words" is imprecise.** There are exactly two instances of the word "happy", one negated and one as an adverbial clause ("whenever the child got *happy*…"). **Neither uses emotion as the predicate.** The accurate statement is: *he does not use emotion words as the main-clause predicate.*
 
-**The same batch of hand-written threshold rules also produced four structural false positives** (detail in the [decision report](docs/research/why-no-llm-judgment.md)): flagging the author's own original text as "deviating from the author"; sampling at the wrong level; treating a low-frequency feature as a per-passage requirement; and **scoring a passage that was measurably closer to the author's fingerprint no better than a badly-written one**.
+**The same batch of hand-written threshold rules also produced four structural false positives**: flagging the author's own original text as "deviating from the author"; sampling at the wrong level; treating a low-frequency feature as a per-passage requirement; and **scoring a passage that was measurably closer to the author's fingerprint no better than a badly-written one**. None of these can be fixed by tuning thresholds — they are modelling errors, not parameter errors.
 
-**None of these failures can be fixed by tuning thresholds** — they are modelling errors, not parameter errors.
+### Why a stronger model does not fix this
+
+A model never compares *your text* against *the author*. It compares *your text* against *its understanding of the author*. That gap does not close as models improve — **a stronger model produces a finer-grained proxy, and a finer-grained proxy is still a proxy.**
+
+Four structural reasons on top of that:
+
+1. **The description itself can point at the wrong level.** Even the most natural first impression — "this author favors short sentences" — was false.
+2. **A reader with only the text in front of them cannot see much of what determines "sounding like" someone** (the choices the author didn't make, who they were in conversation with, what they deliberately avoided). **Some disagreements are not model failures; they are task failures.**
+3. **The remaining subjective layer is unstable even between humans**, and the disagreement concentrates exactly on "competent writing that may or may not be the author" — which is every text a learner will ever produce.
+4. **The cost of error is asymmetric.** Get it right: a useful hint. Get it wrong: the user deletes a correct device, **and the loss is irreversible and invisible to them.**
+
+> **In the business of teaching someone to write, wrong guidance is worse than no guidance.**
+
+Deleting the judgment costs nothing, because the Franklin method's engine was never the judgment. It is the *actions*: read, reconstruct away from the source, delay, compare side by side. Franklin himself worked exactly this way — **his critic was himself.**
+
+### Read the full study
+
+| What you want | English | 中文 |
+| --- | --- | --- |
+| Full reasoning, costs, follow-ups | [decision report](docs/research/why-no-llm-judgment.md) | [决策报告](docs/研究/为什么不做LLM判断评分.md) |
+| The whole conclusion (three layers decomposed) | [research conclusion](docs/research/llm-authorship-judgment.md) | [研究结论](docs/研究/LLM能否判断像不像作者.md) |
+| Where every number comes from (recomputable) | [measured data](docs/research/appendix-measured-data.md) | [实测数据汇总](docs/研究/附录-实测数据汇总.md) |
+| Per-block votes and cross-tabs | [experiment 1 results](docs/research/experiment-1-final-results.md) | [实验一最终结果](docs/研究/实验一最终结果.md) |
+| Experiment 2 design (not run) | [experiment 2 design](docs/research/experiment-2-design.md) | [实验二设计](docs/研究/实验一结果与实验二设计.md) |
+| Raw material and every script | [`docs/research/experiment-data/`](docs/research/experiment-data/) | [`docs/研究/实验数据/`](docs/研究/实验数据/) |
+
+**The corpus is not distributed with this repository** (published, copyrighted work). The material-construction script `build_material.py` records every parameter including the fixed shuffle seed, so the blocks can be rebuilt from it.
 
 ---
 
-## What it does
+## What this tool does
 
-**One job: make the Franklin method easier to actually practise.**
+**It turns the Franklin method into a workflow you can actually keep up. The system handles splitting, hinting, hiding, delaying, recording; all understanding and all judgment stay with you.**
+
+Import an essay or a book. Read the original. Wait a few minutes. Rewrite it from memory. Then see your version and the original side by side, sentence by sentence.
 
 | | The system handles | You handle |
 | --- | --- | --- |
@@ -185,15 +204,8 @@ Corpus: one real 1,351-character prose piece.
 - **Hints are per sentence, not per paragraph.** This is what Franklin actually did — he wrote *short hints of the sentiment of each sentence*, waited a few days, and rebuilt the whole piece from those hints. It is also what the exercise trains: writing each sentence well. A paragraph summary reorganises the original, and that structure belongs to the model, not to you.
 - **A hint says what the sentence is about — never the wording, never a technique, never an evaluation.** And the tool checks mechanically: any hint containing 8 or more consecutive characters identical to the source is dropped.
 - **Comparison aligns by longest common subsequence, not by index.** Skip one sentence and index pairing misreports everything after it — worse than showing nothing.
-- **The delay sits between reading and writing.** Write immediately and you write the afterimage in your eyes; wait a few minutes and you write what you actually retained. Putting the delay after submission only prevents peeking — that guards against cheating, not against forgetting.
+- **The delay sits between reading and writing.** Write immediately and you write the afterimage in your eyes; wait a few minutes and you write what you actually retained.
 - **Notes belong to the book, not to a single round.** Single-sentence notes and the closing observation go into one list, tagged "sentence n" or "whole passage".
-
----
-
-## Screenshots
-
-> To be added: shelf / reading / writing desk / single-sentence drill / sentence-by-sentence comparison.
-> Want to help? Post your screenshots in [Discussions](https://github.com/luluxiuc/Franklin-Writing/discussions) → Show and tell.
 
 ---
 
@@ -285,7 +297,7 @@ Finally, write one line under **What I noticed**. One line is enough — "I drop
 
 | Mechanism | How |
 | --- | --- |
-| **Each text is generated once** | The cache key is **content hash + model name + prompt version** — independent of which book, chapter, or passage the text sits in. The same text used twice is read locally; a paragraph repeated inside a book is generated once; switching models or editing the prompt invalidates the cache automatically, with no manual cleanup. |
+| **Each text is generated once** | The cache key is **content hash + model name + prompt version** — independent of which book, chapter, or passage the text sits in. The same text used twice is read locally; a paragraph repeated inside a book is generated once; switching models or editing the prompt invalidates the cache automatically. |
 | **Pre-warm instead of waiting** | **Prepare in advance** batch-generates hints for a whole book in the background (concurrency 2 by default; `FK_LLM_CONCURRENCY`, set to 1 on tight free tiers). By the time you reach a passage, the hints are already local — **no model wait during practice.** |
 | **Count is set by sentence count; length is capped** | One hint per source sentence, so **the model does not decide how many hints you get.** Per-hint cap: 22 chars for ≤4 sentences, 18 for ≤8, 15 beyond that. Output tokens are bounded by *sentences × cap*. |
 | **Quote the cost before spending** | Batch warming shows how many passages remain and roughly how many tokens it will take, and asks again above a threshold. The figure is explicitly labelled an **estimate**. |
@@ -304,6 +316,30 @@ Finally, write one line under **What I noticed**. One line is enough — "I drop
 - **No network** unless you enable hints. Sources and drafts never leave the machine.
 
 The comparison page does exactly one thing: it puts two texts and one mechanical diff in front of you. **The judgment is yours.**
+
+---
+
+## Repository layout
+
+```
+启动.cmd / 启动.sh          launchers (double-click)
+app/
+  fk_store.py               data layer: splitting (chapter/passage), store, state machine, notes
+  fk_llm.py                 talking to the model: the per-sentence prompt, quotas, readable errors
+  fk_summary.py             hint cache, token ledger, batch warming, copy detection
+  fk_core.py                pure functions for splitting and comparison (LCS alignment, leak scan)
+  fk_server.py              local HTTP server + built-in self-checks
+  web/                      frontend: shelf / reading / writing desk / sentence drill / comparison
+  data/                     your books, drafts, notes, hint cache (not in the repo)
+tests/                      seven suites + a stub-model server + repository self-checks
+docs/
+  research/ 研究/            the study and all measured data (English / 中文)
+  design/ 设计/              methodology, no-judgment design, user guide (English / 中文)
+_capability/                experiment material, judge verdicts, analysis scripts
+_probe/                     development-time probe scripts
+_extract/                   extracted text of the three original input documents (where it started)
+fk_tool/                    the CLI prototype the web version replaced (kept for record, unmaintained)
+```
 
 ---
 
@@ -327,31 +363,6 @@ Each practice round can also be exported to Markdown, and notes export in one cl
 
 ---
 
-## Repository layout
-
-```
-启动.cmd / 启动.sh          launchers (double-click)
-app/
-  fk_store.py               data layer: splitting (chapter/passage), store, state machine, notes
-  fk_llm.py                 talking to the model: the per-sentence prompt, quotas, readable errors
-  fk_summary.py             hint cache, token ledger, batch warming, copy detection
-  fk_core.py                pure functions for splitting and comparison (LCS alignment, leak scan)
-  fk_server.py              local HTTP server + built-in self-checks
-  web/                      frontend: shelf / reading / writing desk / sentence drill / comparison
-  data/                     your books, drafts, notes, hint cache (not in the repo)
-tests/                      seven suites + a stub-model server
-docs/
-  设计/                      methodology, no-judgment design, user guide, engine run report
-  研究/                      research reports and all measured data (Chinese)
-  research/                 the same, in English
-_capability/                experiment material, judge verdicts, analysis scripts
-_probe/                     development-time probe scripts
-_extract/                   extracted text of the three original input documents (where it started)
-fk_tool/                    the CLI prototype the web version replaced (kept for record, unmaintained)
-```
-
----
-
 ## Tests
 
 ```bash
@@ -370,6 +381,8 @@ python tests/run_all.py
 
 **378 checks** (the number the runner itself reports). The runner starts its own stub-model server for the rendering checks and shuts it down afterwards — no manual setup, and no real model calls (so it never costs money).
 
+There is also a **repository self-check** (`python tests/docs_check.py`) for dead links, leaked keys, private data and unparseable JSON. CI runs both.
+
 A few self-checks are worth calling out, because **each one caught a real bug during development**:
 
 - **Before returning, the writing-phase endpoints re-scan their own payload against the source** and refuse to serve if anything looks like a leak. This caught a chapter title — derived from the source's first sentence — being displayed in the practice page header, handing the user the opening of the passage they were about to write.
@@ -385,13 +398,14 @@ A few self-checks are worth calling out, because **each one caught a real bug du
 
 | Limitation | Detail | Status |
 | --- | --- | --- |
-| **Human agreement was never measured** | All judges are LLMs, which is circular — this measures self-consistency, not agreement with human experts. The tooling exists (`_capability/human_kit.py`); **it needs 3+ qualified readers to each annotate once.** | Open |
-| **The retrieval channel was not removed** | 3 of 5 judges violated the protocol and looked up the source, despite an explicit instruction not to speculate about authorship. **So "0% misjudgment on real text" cannot be credited purely to style recognition** — part of it is memory retrieval. And the real use case is precisely non-canonical text. | Open |
-| **The same-length paired test failed** | With lengths strictly matched, the judge's stated reason was "passage B is verbatim identical to the original, i.e. an excerpt", with a citation link — it bypassed style comparison and looked up the source. | Recorded |
-| **Experiment 2 (single-sentence discrimination) is designed but not run** | Pair an author's real sentence against a rewrite with identical content, length, and objects, varying only the *writing*. That is the design that would truly separate style judgment from length judgment. | Open |
-| **The experimenter built the materials *and* designed the study** | The imitations inevitably carry the experimenter's own fingerprint. If a judge can pick them out, there is no way to tell "recognised the author's hand" from "recognised the experimenter's hand". The clean fix is a different writer producing the materials. | Structural |
+| **Human agreement was never measured** | All judges are LLMs, which is circular — this measures self-consistency, not agreement with human experts. The tooling exists (`docs/research/experiment-data/human_kit.py`); **it needs 3+ qualified readers to each annotate once.** | Open |
+| **The retrieval channel was not removed** | 3 of 5 judges violated the protocol and looked up the source. **So "0% misjudgment on real text" cannot be credited purely to style recognition** — and the real use case is precisely non-canonical text. | Open |
+| **The same-length paired test failed** | With lengths strictly matched, the judge's stated reason was "passage B is verbatim identical to the original, i.e. an excerpt", with a citation link — it bypassed style comparison. | Recorded |
+| **Experiment 2 (single-sentence discrimination) is designed but not run** | Pair an author's real sentence against a rewrite with identical content, length and objects, varying only the *writing*. | Open |
+| **The experimenter built the materials *and* designed the study** | The imitations carry the experimenter's own fingerprint; there is no way to separate "recognised the author's hand" from "recognised the experimenter's hand". | Structural |
 | **Small sample** | 18 blocks, 5 judges — directional conclusions only, not a precise ceiling on ability. | Recorded |
-| **The pre-registered rule missed the real failure mode** | Its trigger was "misjudgment rate on real text ≥ 37.5%"; measured 0%, so it never fired. The actual failure was the opposite — accepting competent imitations as real. We record the corrected rule together with the reasoning, so it does not become post-hoc criterion picking. | Recorded |
+| **The pre-registered rule missed the real failure mode** | Its trigger was "misjudgment rate on real text ≥ 37.5%"; measured 0%, so it never fired. The actual failure was accepting competent imitations. | Recorded |
+| **The raw logs were not all kept** | Per-block verdicts survive for only 3 of the 5 judges, and the verdict values were hand-transcribed constants. | Recorded |
 
 **But these limitations can only strengthen the conclusion, not overturn it**: the judgment is unstable between humans too, and the disagreement concentrates on exactly the kind of text a learner produces. See [section 4.3 of the decision report](docs/research/why-no-llm-judgment.md).
 
@@ -407,10 +421,10 @@ Contributions are welcome. Where help is most useful:
 | **Interface and feel** | Typography, fonts, immersion. For a writing tool, the feel *is* the product. |
 | **Corpus handling** | Splitting rules for other forms — classical Chinese, poetry, translated prose, technical writing. |
 | **Packaging** | Single-file builds for Windows/macOS, Docker, Homebrew. |
-| **Translation** | README and UI strings into more languages. |
+| **Translation** | UI strings into more languages — the interface is still Chinese-only. |
 | **Bug reports** | Especially "I clicked it and nothing happened" and "the split is wrong" — please include reproduction steps. |
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before you start. By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
+Read [CONTRIBUTING.en.md](CONTRIBUTING.en.md) before you start. By participating you agree to the [Code of Conduct](CODE_OF_CONDUCT.en.md).
 
 **Have an idea that isn't fully formed?** Take it to [Discussions](https://github.com/luluxiuc/Franklin-Writing/discussions) rather than opening an issue.
 

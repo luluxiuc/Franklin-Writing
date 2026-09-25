@@ -1,8 +1,8 @@
+[English](README.md) · [中文](../../研究/实验数据/)
+
 # Experiment data and scripts
 
 This directory holds **the raw verdicts, the material parameters, and every analysis script** from Experiment 1. Every figure in the research reports should be traceable to a file here.
-
-> **中文:** [docs/研究/实验数据/](../../研究/实验数据/)
 
 ---
 

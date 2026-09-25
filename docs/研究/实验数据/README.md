@@ -1,8 +1,8 @@
+[English](../../research/experiment-data/) · [中文](README.md)
+
 # 实验数据与脚本
 
 这里放实验一的**原始判定、材料参数和全部分析脚本**。研究报告中每一个数字都应该能在这些文件里找到出处。
-
-> **English:** [docs/research/experiment-data/](../../research/experiment-data/)
 
 ---
 

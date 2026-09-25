@@ -1,6 +1,8 @@
+[English](appendix-measured-data.md) · [中文](../研究/附录-实测数据汇总.md)
+
 # Appendix: All measured data cited in this report
 
-**Language:** English translation of the original Chinese data appendix [`docs/研究/appendix-measured-data.md`](appendix-measured-data.md).
+**Language:** English translation of the original Chinese data appendix [`docs/研究/附录-实测数据汇总.md`](../研究/附录-实测数据汇总.md).
 **Purpose:** auditability. Every figure in the research reports traces to a row here.
 
 This file is the data source. Every number in the body of the report comes from here, and every one of them can be recomputed.

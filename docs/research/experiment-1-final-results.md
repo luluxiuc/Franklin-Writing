@@ -1,6 +1,8 @@
+[English](experiment-1-final-results.md) · [中文](../研究/实验一最终结果.md)
+
 # Experiment 1 Final Results (4 Judges)
 
-**Language:** English translation of the original Chinese report [`docs/研究/experiment-1-final-results.md`](experiment-1-final-results.md).
+**Language:** English translation of the original Chinese report [`docs/研究/实验一最终结果.md`](../研究/实验一最终结果.md).
 **Date:** 2026-09
 
 > *Translator's note: this file is an interim snapshot. Its heading, master table and decisive-metrics table all report **4 judges**, and it is internally consistent at that number. The final report set for Experiment 1 covers **5 judges** (see [llm-authorship-judgment.md](llm-authorship-judgment.md) and [appendix-measured-data.md](appendix-measured-data.md), where judge 3 is the only judge that caught all 5 clean imitations and judges 1, 4 and 5 each caught 0/5). The 4-judge figures reproduced here are the ones the source document states and have not been recalculated. The `2026-01` date carried by the source has been corrected to 2026-09, which is when the repository's file timestamps show this work was actually done.*

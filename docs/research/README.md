@@ -1,10 +1,10 @@
+[English](README.md) · [中文](../研究/)
+
 # Research: can an LLM judge whether writing "sounds like the author"?
 
 This directory holds the **evidence behind this project's central decision**. It is not promotional material.
 
 The tool does not score, does not evaluate, and never says whether your writing "sounds like the author" — not because that was too hard, but because **we built it, measured it, and deliberately deleted it.** Everything here is the material behind that: the design, the raw numbers, and the parts that are unfavourable to us.
-
-> **中文:** [docs/研究/](../研究/) — the same reports in Chinese.
 
 ---
 
