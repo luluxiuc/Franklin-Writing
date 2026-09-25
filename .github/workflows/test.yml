@@ -92,8 +92,21 @@ jobs:
   # ------------------------------------------------------------------
   # 界面冒烟:确认服务真的能起来、健康检查有响应
   # ------------------------------------------------------------------
+  # ------------------------------------------------------------------
+  # 启动冒烟：确认服务真的能起来、健康检查有响应。
+  #
+  # 之前这里在三个平台上都用 bash，Windows 那个一直失败 —— 在 Windows 上
+  # 用 Git Bash 管理后台进程（&、kill、seq）不可靠。现在按平台分开：
+  #   unix  → bash
+  #   windows → PowerShell
+  #
+  # 而且 Windows 上**另外加两条这个平台独有的检查**：启动器必须是纯 ASCII、
+  # 且用 CRLF 行尾。cmd.exe 按系统 OEM 代码页解析批处理，正文里有一个中文就会
+  # 被截断并当成命令执行 —— 表现是双击后窗口闪一下、服务没起、没有任何报错。
+  # 这个 bug 真的发生过，所以放到 CI 里盯住，而不是只靠本地那个自检脚本。
+  # ------------------------------------------------------------------
   smoke:
-    name: 启动冒烟
+    name: 启动冒烟 (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -105,7 +118,29 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: 起服务并探活
+      - name: 启动器必须是纯 ASCII + CRLF（Windows 专有）
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $bytes = [System.IO.File]::ReadAllBytes('启动.cmd')
+          $bad = @($bytes | Where-Object { $_ -gt 127 })
+          if ($bad.Count -gt 0) {
+            Write-Error "启动.cmd 里有 $($bad.Count) 个非 ASCII 字节 —— cmd.exe 会把中文截断并当成命令执行，双击就没有任何反应。"
+            exit 1
+          }
+          $text = [System.Text.Encoding]::ASCII.GetString($bytes)
+          if (-not $text.Contains("`r`n")) {
+            Write-Error "启动.cmd 用的不是 CRLF 行尾。"
+            exit 1
+          }
+          if (-not $text.Contains('app\fk_server.py')) {
+            Write-Error "启动.cmd 没有调用 app\fk_server.py。"
+            exit 1
+          }
+          Write-Host "启动.cmd：纯 ASCII、CRLF、确实调用服务 —— 通过"
+
+      - name: 起服务并探活（unix）
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           python app/fk_server.py --port 8231 --no-browser &
@@ -123,3 +158,26 @@ jobs:
           echo "服务没有在 20 秒内就绪"
           kill $SERVER_PID 2>/dev/null || true
           exit 1
+
+      - name: 起服务并探活（Windows）
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath python `
+                -ArgumentList 'app/fk_server.py','--port','8231','--no-browser','--quiet' `
+                -PassThru -WindowStyle Hidden
+          try {
+            $ok = $false
+            foreach ($i in 1..40) {
+              try {
+                $h = Invoke-RestMethod 'http://127.0.0.1:8231/api/health' -TimeoutSec 2
+                if ($h.ok) { $ok = $true; break }
+              } catch { Start-Sleep -Milliseconds 500 }
+            }
+            if (-not $ok) { Write-Error '服务没有在 20 秒内就绪'; exit 1 }
+            Write-Host '服务已就绪'
+            $shelf = Invoke-RestMethod 'http://127.0.0.1:8231/api/shelf' -TimeoutSec 5
+            Write-Host ('书架返回 ok，键：' + ($shelf.PSObject.Properties.Name -join ', '))
+          } finally {
+            if (-not $p.HasExited) { $p.Kill() }
+          }
