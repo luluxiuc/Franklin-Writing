@@ -52,12 +52,14 @@ def tracked_files():
                              capture_output=True, check=True)
         top = os.path.normpath(top.stdout.decode('utf-8', 'replace').strip())
         if os.path.normcase(top) == os.path.normcase(ROOT):
-            out = subprocess.run(['git', 'ls-files'], cwd=ROOT,
+            # 必须带 -z：git 默认会把非 ASCII 文件名转义成 \345\220\257… 这种八进制，
+            # 那样「启动.cmd」就永远匹配不上，检查会静默失效（踩过一次）。
+            out = subprocess.run(['git', 'ls-files', '-z'], cwd=ROOT,
                                  capture_output=True, check=True)
-            names = out.stdout.decode('utf-8', 'replace').splitlines()
+            names = [n for n in out.stdout.decode('utf-8', 'replace').split('\0') if n.strip()]
             if names:
-                print('（用 git ls-files，仓库根 = 项目根）')
-                return [n for n in names if n.strip()]
+                print('（用 git ls-files -z，仓库根 = 项目根）')
+                return names
     except Exception:
         pass
     # 退化为扫目录：仓库根不是项目根，或者根本不在 git 里
@@ -174,8 +176,71 @@ def check_runtime_data(files):
         ok('没有语料原文被跟踪')
 
 
+def check_launchers(files):
+    """启动脚本的自检。
+
+    为什么需要它：这两个脚本是使用者接触项目的第一步，它们坏掉的表现是
+    「双击了，窗口闪一下就没反应」，没有任何报错可看。而且已经真的坏过两次：
+      1) 启动.cmd 是 UTF-8 无 BOM 且正文含中文 —— cmd.exe 按系统 OEM 代码页
+         （中文 Windows 上是 GBK）逐行解析批处理，多字节字符被截断，剩下的
+         字节被当成命令执行。整个启动器等于没在启动，还闪退。
+      2) 启动.sh 的 echo 少了一个配对引号 —— bash 会把下一行的 exec 吞进字符串。
+    两条都不是靠肉眼能稳定看住的，所以机械检查。
+    """
+    print('\n四、启动脚本是否可用（双击/执行就能起）')
+
+    cmd_rel = '启动.cmd'
+    if cmd_rel not in files:
+        bad('缺少 %s' % cmd_rel)
+    else:
+        full = os.path.join(ROOT, cmd_rel)
+        raw = open(full, 'rb').read()
+        nonascii = [(i, b) for i, b in enumerate(raw) if b > 0x7f]
+        if nonascii:
+            bad('%s 里有 %d 个非 ASCII 字节（偏移 %s）—— cmd.exe 按 OEM 代码页解析，'
+                '中文会被截断并当成命令执行。这个文件必须保持纯 ASCII。'
+                % (cmd_rel, len(nonascii), nonascii[0][0]))
+        else:
+            ok('%s 是纯 ASCII' % cmd_rel)
+        if b'\r\n' not in raw:
+            bad('%s 用的是 LF 行尾，Windows 批处理应为 CRLF' % cmd_rel)
+        else:
+            ok('%s 行尾是 CRLF' % cmd_rel)
+        text = raw.decode('ascii', 'replace')
+        if 'app\\fk_server.py' not in text:
+            bad('%s 里没有调用 app\\fk_server.py' % cmd_rel)
+        else:
+            ok('%s 调用了 app\\fk_server.py' % cmd_rel)
+
+    sh_rel = '启动.sh'
+    if sh_rel not in files:
+        bad('缺少 %s' % sh_rel)
+    else:
+        text = io.open(os.path.join(ROOT, sh_rel), encoding='utf-8').read()
+        if not text.startswith('#!/usr/bin/env bash'):
+            bad('%s 缺少 shebang' % sh_rel)
+        else:
+            ok('%s 有 shebang' % sh_rel)
+        # 引号必须成对：出过「删多余引号时删掉结尾那一个」的事故
+        unbalanced = []
+        for i, line in enumerate(text.splitlines(), 1):
+            s = line.strip()
+            if s.startswith('#') or not s:
+                continue
+            if s.count('"') % 2 or s.count("'") % 2:
+                unbalanced.append(i)
+        if unbalanced:
+            bad('%s 第 %s 行的引号不成对 —— 这会让后续行被吞进字符串' % (sh_rel, unbalanced))
+        else:
+            ok('%s 每行引号成对' % sh_rel)
+        if 'app/fk_server.py' not in text:
+            bad('%s 里没有调用 app/fk_server.py' % sh_rel)
+        else:
+            ok('%s 调用了 app/fk_server.py' % sh_rel)
+
+
 def check_json(files):
-    print('\n四、实验数据里的 JSON 是否都能解析')
+    print('\n五、实验数据里的 JSON 是否都能解析')
     jsons = [f for f in files if f.endswith('.json')]
     if not jsons:
         ok('没有 .json 需要检查')
@@ -190,7 +255,7 @@ def check_json(files):
 
 
 def check_citation(files):
-    print('\n五、CITATION.cff 是否可解析')
+    print('\n六、CITATION.cff 是否可解析')
     rel = 'CITATION.cff'
     if rel not in files:
         bad('缺少 CITATION.cff')
@@ -217,6 +282,7 @@ def main():
     check_links(files)
     check_secrets(files)
     check_runtime_data(files)
+    check_launchers(files)
     check_json(files)
     check_citation(files)
 
